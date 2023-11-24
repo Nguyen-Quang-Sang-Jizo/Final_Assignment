@@ -1,0 +1,8 @@
+.navbar {
+  background: linear-gradient(to bottom, rgb(249, 114, 114),rgb(241, 141, 141));
+  display: flex;
+  justify-content: space-between;
+}
+body {
+  background: linear-gradient(to right, #6ed2d2,#d6a2d3);
+}
