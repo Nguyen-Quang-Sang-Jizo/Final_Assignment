@@ -137,7 +137,7 @@ export const SortableItem = ({ favoritePokemon, handleConfirmFavorite }: Props) 
         <IconButton
           sx={{ color: 'red' }}
           onMouseUp={handleOpenModal}
-          title="Double tap to delete"
+          title="Delete from My Pokemon List"
         >
           <FavoriteIcon />
         </IconButton>
