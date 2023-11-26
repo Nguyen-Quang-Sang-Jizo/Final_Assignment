@@ -1,9 +1,16 @@
-import { Box, Typography, Grid, CardMedia } from "@mui/material";
+import { Box, Typography, Grid, CardMedia, IconButton } from "@mui/material";
 import { useParams } from 'react-router-dom';
 import { useQuery } from "@tanstack/react-query";
-
+import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import { useSelector, useDispatch } from 'react-redux'
+import { addFavorite, deleteFavorite } from '../../../redux/Slice/pokemonSlice'
+import { PokemonHome } from "../../interface/interface";
+import { ToastContainer, toast } from 'react-toastify';
 
 const PokemonDetail = () => {
+    const favoritePokemon = useSelector((state: any) => state.favorite.value)
+    const dispatch = useDispatch()
     const { id } = useParams();
     const { isLoading, isError, data: pokemonData = [], error } = useQuery({
         queryKey: ['pokeData'],
@@ -11,6 +18,16 @@ const PokemonDetail = () => {
             fetch('https://pokeapi.co/api/v2/pokemon/' + id)
                 .then((res) => res.json())
     });
+
+    const handleFavoriteClick = async (pokemon: PokemonHome) => {
+        if (favoritePokemon.some((favPokemon: any) => favPokemon.id === pokemon.id)) {
+            dispatch(deleteFavorite(pokemon.id));
+            toast.success('Delete success!');
+        } else {
+            dispatch(addFavorite(pokemon));
+            toast.success('Add to success!');
+        }
+    };
 
     const { data: pokemonSpecies = [] } = useQuery({
         queryKey: ['pokeSpacies'],
@@ -26,6 +43,8 @@ const PokemonDetail = () => {
     if (isError) {
         return <span>Error: {error.message}</span>;
     }
+
+    const isFavorite = favoritePokemon.some((favPokemon: any) => favPokemon.id === pokemonData.id);
 
     const getFlavorSpeech = () => {
         const enLang = pokemonSpecies?.flavor_text_entries?.filter(
@@ -66,6 +85,14 @@ const PokemonDetail = () => {
                     <Typography variant="h6" component="h6" sx={{ mt: 1, fontSize: '50px' }}>
                         {pokemonData?.species?.name}
                     </Typography>
+                    <IconButton
+                        sx={{ color: isFavorite ? 'red' : 'grey' }}
+                        aria-label="favorite"
+                        onClick={() => handleFavoriteClick(pokemonData)}
+                        title={isFavorite ? 'Delete from My Pokemon List' : 'Add to My Pokemon List'}
+                    >
+                        {isFavorite ? <FavoriteIcon /> : <FavoriteBorderOutlinedIcon />}
+                    </IconButton>
                 </Grid>
                 <Grid item xs={8}>
                     <Grid container spacing={2}>
@@ -73,7 +100,7 @@ const PokemonDetail = () => {
                             <Grid container spacing={19}>
                                 <Grid item xs={6}>
                                     <Typography>
-                                        <Typography sx={{fontSize:'50px'}}>
+                                        <Typography sx={{ fontSize: '50px' }}>
                                             Bio
                                         </Typography>
                                         <Typography sx={{ mt: 1 }}>
@@ -109,7 +136,7 @@ const PokemonDetail = () => {
                                     ))}</Typography>
                                 </Grid>
                                 <Grid item xs={6}>
-                                    <Typography  sx={{fontSize:'50px'}}>
+                                    <Typography sx={{ fontSize: '50px' }}>
                                         Training
                                     </Typography>
                                     <Typography sx={{ mt: 1 }} display="flex" alignItems="center">
@@ -150,7 +177,7 @@ const PokemonDetail = () => {
                         <Grid item xs={12}>
                             {pokemonData.stats && (
                                 <Box mt={2}>
-                                    <Typography sx={{fontSize:'50px'}}>Stats</Typography>
+                                    <Typography sx={{ fontSize: '50px' }}>Stats</Typography>
                                     <Typography display="flex" alignItems="center">
                                         {pokemonData.stats.map((stat: any) => (
                                             <Box key={stat.stat.name} style={{ marginRight: '80px' }}>
@@ -165,6 +192,7 @@ const PokemonDetail = () => {
                     </Grid>
                 </Grid>
             </Grid>
+            <ToastContainer autoClose={1000} />
         </div>
     );
 };
