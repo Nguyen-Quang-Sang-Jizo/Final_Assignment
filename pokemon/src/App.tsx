@@ -19,7 +19,7 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <Navbar />
       <Routes>
-        <Route path="/home" element={<HomePage />} />
+        <Route path="/" element={<HomePage />} />
         <Route path="/pokemon" element={<PokemonList/>} />
         <Route path="/my-pokemon" element={<MyPokemonList/>} />
         <Route path="/pokemon/:id" element={<PokemonDetail />} />
