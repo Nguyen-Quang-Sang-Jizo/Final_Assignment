@@ -15,7 +15,7 @@ const Navbar = () => {
             style={{ width: '40px', height: '40px', borderRadius: '100%', display: 'flex', marginRight: '10px' }} />
         </a>
         <nav>
-          <Button className="navButton" component={Link} to="/home" color="inherit">
+          <Button className="navButton" component={Link} to="/" color="inherit">
             Home
           </Button>
           <Button className="navButton" component={Link} to="/pokemon" color="inherit">
