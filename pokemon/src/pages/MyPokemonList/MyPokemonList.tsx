@@ -1,8 +1,6 @@
-import { PokemonHome } from "../../interface/interface";
-import {
-  Grid,
-} from '@mui/material';
-import React, { useMemo, useState } from 'react';
+import { PokemonHome } from '../../interface/interface';
+import { Grid } from '@mui/material';
+import React, { useMemo } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import {
   DndContext,
@@ -17,23 +15,20 @@ import {
   SortableContext,
   sortableKeyboardCoordinates,
 } from '@dnd-kit/sortable';
-import { SortableItem } from "./SortableItem"
+import { SortableItem } from './SortableItem';
+import { useSelector, useDispatch } from 'react-redux';
+import { deleteFavorite, updateFavorite, PokemonSliceState } from '../../../redux/Slice/pokemonSlice';
 
-type IProps = {
-  setFavoritePokemon: React.Dispatch<React.SetStateAction<PokemonHome[]>>;
-  favoritePokemon: PokemonHome[];
-};
+const MyPokemonList: React.FC = () => {
+  const favoritePokemon = useSelector((state: { favorite: PokemonSliceState }) => state.favorite.value);
+  const dispatch = useDispatch();
+  console.log(favoritePokemon)
 
-const MyPokemonList: React.FC<IProps> = (props) => {
-  const { favoritePokemon, setFavoritePokemon } = props;
-
-  const id = useMemo(() => favoritePokemon.map((id: PokemonHome) => id.id), [favoritePokemon]);
-
-  console.log(id);
+  const id = useMemo(() => favoritePokemon.map((pokemon: PokemonHome) => pokemon.id), [favoritePokemon]);
 
   const handleConfirmFavorite = (pokemon: PokemonHome) => {
-    if (favoritePokemon.some((favPokemon) => favPokemon.id === pokemon.id)) {
-      setFavoritePokemon((prevFavorites) => prevFavorites.filter((favPokemon) => favPokemon.id !== pokemon.id));
+    if (favoritePokemon.some((favPokemon: any) => favPokemon.id === pokemon.id)) {
+      dispatch(deleteFavorite(pokemon.id));
       toast.success('Delete success!');
     }
   };
@@ -48,10 +43,10 @@ const MyPokemonList: React.FC<IProps> = (props) => {
   const handleDragEnd = (event: any) => {
     const { active, over } = event;
     if (active.id !== over.id) {
-      const oldIndex = favoritePokemon.findIndex((pokemon) => pokemon.id === active.id);
-      const newIndex = favoritePokemon.findIndex((pokemon) => pokemon.id === over.id);
+      const oldIndex = favoritePokemon.findIndex((pokemon: any) => pokemon.id === active.id);
+      const newIndex = favoritePokemon.findIndex((pokemon: any) => pokemon.id === over.id);
       const newFavoritePokemon = arrayMove(favoritePokemon, oldIndex, newIndex);
-      setFavoritePokemon(newFavoritePokemon);
+      dispatch(updateFavorite(newFavoritePokemon));
     }
   };
 
@@ -59,10 +54,8 @@ const MyPokemonList: React.FC<IProps> = (props) => {
     <div style={{ padding: '80px 28px' }}>
       <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
         <Grid container spacing={2}>
-          <SortableContext
-            items={id}
-          >
-            {favoritePokemon.map((pokemon, index) => (
+          <SortableContext items={id}>
+            {favoritePokemon.map((pokemon: any) => (
               <SortableItem
                 key={pokemon.id}
                 favoritePokemon={pokemon}

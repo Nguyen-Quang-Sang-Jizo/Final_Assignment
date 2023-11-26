@@ -11,6 +11,7 @@ const queryClient = new QueryClient()
 
 
 
+
 function App() {
   const [favoritePokemon, setFavoritePokemon] = useState<PokemonHome[]>([]);
 
@@ -19,14 +20,8 @@ function App() {
       <Navbar />
       <Routes>
         <Route path="/home" element={<HomePage />} />
-        <Route path="/pokemon" element={<PokemonList
-          setFavoritePokemon={setFavoritePokemon}
-          favoritePokemon={favoritePokemon}
-        />} />
-        <Route path="/my-pokemon" element={<MyPokemonList
-          setFavoritePokemon={setFavoritePokemon}
-          favoritePokemon={favoritePokemon}
-        />} />
+        <Route path="/pokemon" element={<PokemonList/>} />
+        <Route path="/my-pokemon" element={<MyPokemonList/>} />
         <Route path="/pokemon/:id" element={<PokemonDetail />} />
       </Routes>
     </QueryClientProvider>

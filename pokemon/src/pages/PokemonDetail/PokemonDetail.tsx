@@ -1,7 +1,7 @@
-import React from 'react';
 import { Box, Typography, Grid, CardMedia } from "@mui/material";
 import { useParams } from 'react-router-dom';
 import { useQuery } from "@tanstack/react-query";
+
 
 const PokemonDetail = () => {
     const { id } = useParams();
@@ -43,7 +43,6 @@ const PokemonDetail = () => {
     }
 
     const flavorSpeech = getFlavorSpeech();
-    console.log(flavorSpeech)
 
     return (
         <div style={{ padding: '140px 60px 0px 60px' }}>
@@ -54,7 +53,6 @@ const PokemonDetail = () => {
                         flexDirection: 'column',
                         justifyContent: 'center',
                         alignItems: 'center',
-                        backgroundColor: '#ffffff',
                     }}
                 >
                     <CardMedia
@@ -63,7 +61,7 @@ const PokemonDetail = () => {
                         width="500"
                         image={pokemonData?.sprites.other.home.front_default}
                         alt={pokemonData?.species.name}
-                        sx={{paddingBottom:'10px'}}
+                        sx={{ paddingBottom: '10px' }}
                     />
                     <Typography variant="h6" component="h6" sx={{ mt: 1, fontSize: '50px' }}>
                         {pokemonData?.species?.name}
@@ -73,41 +71,78 @@ const PokemonDetail = () => {
                     <Grid container spacing={2}>
                         <Grid item>
                             <Grid container spacing={19}>
-                                <Grid item xs={8}>
-                                    <Typography variant='h5'>
-                                        Bio
+                                <Grid item xs={6}>
+                                    <Typography>
+                                        <Typography sx={{fontSize:'50px'}}>
+                                            Bio
+                                        </Typography>
+                                        <Typography sx={{ mt: 1 }}>
+                                            {flavorSpeech}
+                                        </Typography>
                                     </Typography>
-                                    <Typography variant="h6" component="h6" sx={{ mt: 1 }}>
-                                        {flavorSpeech}
+                                    <Typography display="flex" alignItems="center">
+                                        <Typography style={{ marginRight: '40px' }}>
+                                            Genus:
+                                        </Typography>
+                                        <Typography>
+                                            {pokemonSpecies?.genera?.filter((entry: any) => entry.language.name === "en")[0].genus}
+                                        </Typography>
                                     </Typography>
-                                    <Typography variant='h6'>
-                                        Genus: {pokemonSpecies?.genera?.filter((entry: any) => entry.language.name === "en")[0].genus}
+                                    <Typography display="flex" alignItems="center">
+                                        <Typography style={{ marginRight: '40px' }}>
+                                            Weight:
+                                        </Typography>
+                                        <Typography>
+                                            {pokemonData.weight / 10}kg
+                                        </Typography>
                                     </Typography>
-                                    <Typography variant='h6'>
-                                        Weight: {pokemonData.weight / 10}kg
+                                    <Typography display="flex" alignItems="center">
+                                        <Typography style={{ marginRight: '40px' }}>
+                                            Height:
+                                        </Typography>
+                                        <Typography>
+                                            {pokemonData.height / 10}m
+                                        </Typography>
                                     </Typography>
-                                    <Typography variant='h6'>
-                                        Height: {pokemonData.height / 10}m
-                                    </Typography>
-                                    <Typography variant="h6">Abilities: {pokemonData.abilities.map((ability: any) => (
-                                        <Typography key={ability.slot}>{ability.ability.name}</Typography>
+                                    <Typography display="flex" alignItems="center">Abilities: {pokemonData.abilities.map((ability: any) => (
+                                        <Typography style={{ marginLeft: '30px' }} key={ability.slot}>{ability.ability.name}</Typography>
                                     ))}</Typography>
                                 </Grid>
-                                <Grid item xs={4}>
-                                    <Typography variant='h5'>
+                                <Grid item xs={6}>
+                                    <Typography  sx={{fontSize:'50px'}}>
                                         Training
                                     </Typography>
-                                    <Typography variant='h6'>
-                                        Base Exp: {pokemonData?.base_experience}
+                                    <Typography sx={{ mt: 1 }} display="flex" alignItems="center">
+                                        <Typography style={{ marginRight: '100px' }}>
+                                            Base Exp:
+                                        </Typography>
+                                        <Typography>
+                                            {pokemonData?.base_experience}
+                                        </Typography>
                                     </Typography>
-                                    <Typography variant='h6'>
-                                        Base Happiness: {pokemonSpecies?.base_happiness}
+                                    <Typography display="flex" alignItems="center">
+                                        <Typography style={{ marginRight: '50px' }}>
+                                            Base Happiness:
+                                        </Typography>
+                                        <Typography>
+                                            {pokemonSpecies?.base_happiness}
+                                        </Typography>
                                     </Typography>
-                                    <Typography variant='h6'>
-                                        Capture Rate: {pokemonSpecies?.capture_rate}
+                                    <Typography display="flex" alignItems="center">
+                                        <Typography style={{ marginRight: '75px' }}>
+                                            Capture Rate:
+                                        </Typography>
+                                        <Typography>
+                                            {pokemonSpecies?.capture_rate}
+                                        </Typography>
                                     </Typography>
-                                    <Typography variant='h6'>
-                                        Growth Rate: {pokemonSpecies?.growth_rate?.name}
+                                    <Typography display="flex" alignItems="center">
+                                        <Typography style={{ marginRight: '80px' }}>
+                                            Growth Rate:
+                                        </Typography>
+                                        <Typography>
+                                            {pokemonSpecies?.growth_rate?.name}
+                                        </Typography>
                                     </Typography>
                                 </Grid>
                             </Grid>
@@ -115,13 +150,15 @@ const PokemonDetail = () => {
                         <Grid item xs={12}>
                             {pokemonData.stats && (
                                 <Box mt={2}>
-                                    <Typography variant="h6">Stats</Typography>
-                                    {pokemonData.stats.map((stat: any) => (
-                                        <Box key={stat.stat.name} display="flex" flexDirection="row" alignItems="center">
-                                            <Typography>{stat.stat.name}:</Typography>
-                                            <Typography>{stat.base_stat}</Typography>
-                                        </Box>
-                                    ))}
+                                    <Typography sx={{fontSize:'50px'}}>Stats</Typography>
+                                    <Typography display="flex" alignItems="center">
+                                        {pokemonData.stats.map((stat: any) => (
+                                            <Box key={stat.stat.name} style={{ marginRight: '80px' }}>
+                                                <Typography>{stat.stat.name}:</Typography>
+                                                <Typography>{stat.base_stat}</Typography>
+                                            </Box>
+                                        ))}
+                                    </Typography>
                                 </Box>
                             )}
                         </Grid>
