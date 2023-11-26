@@ -53,15 +53,3 @@ export interface PokemonSpeciesData {
     }
   }
 }
-
-export interface ResponseAPI {
-  info: Info;
-  results: PokemonHome[];
-}
-
-export interface Info {
-  count: number;
-  pages: number;
-  next: string;
-  prev: string;
-}
