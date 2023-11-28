@@ -16,7 +16,7 @@ const PokemonList = () => {
   const favoritePokemon = useSelector((state: any) => state.favorite.value)
   const dispatch = useDispatch()
 
-  const fetchData = async ({ pageParam = 0 }) => {
+  const fetchData = async ({ pageParam }: { pageParam: number }) => {
     const response = await axios.get(`https://pokeapi.co/api/v2/pokemon?offset=${pageParam}&limit=40`);
     const results = response.data.results;
     const requests = results.map((result: Results) => axios.get(result.url));
