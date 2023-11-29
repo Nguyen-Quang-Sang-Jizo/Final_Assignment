@@ -10,7 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Link } from 'react-router-dom';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useSelector, useDispatch } from 'react-redux'
-import { addFavorite, deleteFavorite } from '../../../redux/Slice/pokemonSlice'
+import { addFavorite, deleteFavorite } from '../../redux/Slice/pokemonSlice'
 
 const PokemonList = () => {
   const favoritePokemon = useSelector((state: any) => state.favorite.value)

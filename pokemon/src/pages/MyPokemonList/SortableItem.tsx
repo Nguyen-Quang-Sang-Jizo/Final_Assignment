@@ -16,7 +16,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux'
-import { updateNameFavorite } from '../../../redux/Slice/pokemonSlice'
+import { updateNameFavorite } from '../../redux/Slice/pokemonSlice'
 
 
 interface Props {
@@ -197,6 +197,7 @@ export const SortableItem = ({ favoritePokemon, handleConfirmFavorite }: Props) 
           </Typography>
           <form onSubmit={handleSubmit(Edit)}>
             <input
+            placeholder='Pokemion Name ...'
               type="text"
               defaultValue={favoritePokemon.species.name}
               {...register('name', { required: true, maxLength: 10 })}
