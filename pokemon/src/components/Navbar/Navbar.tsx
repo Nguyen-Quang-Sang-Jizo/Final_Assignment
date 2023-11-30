@@ -1,10 +1,19 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
 import "./Navbar.css";
+import { TextField } from '@mui/material';
+import { useEffect, useState } from 'react';
 
 const Navbar = () => {
+  const location = useLocation();
+  const [isMyPokemonPage, setIsMyPokemonPage] = useState(false);
+
+  useEffect(() => {
+    setIsMyPokemonPage(location.pathname === '/my-pokemon');
+  }, [location.pathname]);
+
   return (
     <AppBar position="fixed" className='navbar'>
       <Toolbar>
@@ -25,6 +34,14 @@ const Navbar = () => {
             My Pokemon List
           </Button>
         </nav>
+        {isMyPokemonPage && (
+          <TextField
+            label="Search..."
+            variant="outlined"
+            size="small"
+            sx={{ marginLeft: 'auto' }}
+          />
+        )}
       </Toolbar>
     </AppBar>
   );
