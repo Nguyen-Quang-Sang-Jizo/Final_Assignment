@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { PokemonHome } from '../../src/interface/interface';
+import { PokemonHome } from '../../interface/interface';
 
 export interface PokemonSliceState {
   value: PokemonHome[];

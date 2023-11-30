@@ -17,7 +17,7 @@ import {
 } from '@dnd-kit/sortable';
 import { SortableItem } from './SortableItem';
 import { useSelector, useDispatch } from 'react-redux';
-import { deleteFavorite, updateFavorite, PokemonSliceState } from '../../../redux/Slice/pokemonSlice';
+import { deleteFavorite, updateFavorite, PokemonSliceState } from '../../redux/Slice/pokemonSlice';
 
 const MyPokemonList: React.FC = () => {
   const favoritePokemon = useSelector((state: { favorite: PokemonSliceState }) => state.favorite.value);
