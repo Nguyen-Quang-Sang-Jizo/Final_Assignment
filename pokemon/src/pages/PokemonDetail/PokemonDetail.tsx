@@ -64,8 +64,10 @@ const PokemonDetail = () => {
     const flavorSpeech = getFlavorSpeech();
 
     return (
-        <div style={{ padding: '140px 60px 0px 60px' }}>
-            <Grid container spacing={5}>
+        <div style={{ padding: '140px 30px 0px 70px'}}>
+            <Grid container spacing={5}
+            sx={{background:'#ffffff', borderRadius:'10px'}}
+            >
                 <Grid item xs={4}
                     sx={{
                         display: 'flex',
