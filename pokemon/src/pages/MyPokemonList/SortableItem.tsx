@@ -122,12 +122,19 @@ export const SortableItem = ({ favoritePokemon, handleConfirmFavorite }: Props) 
         </div>
         <div style={{ display: 'flex', alignItems: 'center', paddingLeft: '38px' }}>
           <Typography variant="h6" component="h6" sx={{
-            mt: 1, fontFamily: 'Monaco', fontSize: '20px'
-          }}>
+            mt: 1, fontFamily: 'Monaco',
+            fontSize: '20px',
+            overflow: 'hidden',
+            whiteSpace: 'nowrap',
+            textOverflow: 'ellipsis',
+            maxWidth: '100px'
+          }}
+          title={favoritePokemon.species.name}
+          >
             {favoritePokemon.species.name}
           </Typography>
           <IconButton
-            sx={{ color: 'green',paddingRight: '0px', marginLeft: 'auto'  }}
+            sx={{ color: 'green', paddingRight: '0px', marginLeft: 'auto' }}
             onMouseUp={handleOpenEditModal}
             title="Edit"
           >
@@ -197,13 +204,13 @@ export const SortableItem = ({ favoritePokemon, handleConfirmFavorite }: Props) 
           </Typography>
           <form onSubmit={handleSubmit(Edit)}>
             <input
-            placeholder='Pokemion Name ...'
+              placeholder='Pokemion Name ...'
               type="text"
               defaultValue={favoritePokemon.species.name}
-              {...register('name', { required: true, maxLength: 10 })}
+              {...register('name', { required: true, maxLength: 20 })}
             />
             <br />
-            {errors.name && <span>0 &lt; character &lt; 10</span>}
+            {errors.name && <span>0 &lt; character &lt; 20</span>}
             <br />
             <Button onClick={handleCloseEditModal}>Cancel</Button>
             <Button type="submit">Save</Button>

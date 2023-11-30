@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { Typography, Grid, Paper, IconButton, CardMedia, Button, CircularProgress } from '@mui/material';
+import { Typography, Grid, Paper, IconButton, CardMedia, CircularProgress } from '@mui/material';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { PokemonHome, Results } from '../../interface/interface';
