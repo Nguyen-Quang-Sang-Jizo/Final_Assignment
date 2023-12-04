@@ -4,15 +4,18 @@ import { Link } from 'react-router-dom';
 
 const HomePage = () => {
   const id = Math.floor(Math.random() * 1292) + 1;
-  console.log(id);
 
-  const { data: pokemon = []} = useQuery({
+  const { data: pokemon = [], refetch } = useQuery({
     queryKey: ['pokeData'],
     queryFn: () =>
       fetch('https://pokeapi.co/api/v2/pokemon/' + id)
         .then((res) => res.json()),
-    refetchOnWindowFocus: true, 
+    refetchOnWindowFocus: true,
   });
+
+  if (!pokemon) {
+    refetch();
+  }
 
   return (
     <div style={{ padding: '90px 544px' }}>

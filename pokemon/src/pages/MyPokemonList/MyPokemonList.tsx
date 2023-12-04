@@ -22,7 +22,6 @@ import { deleteFavorite, updateFavorite, PokemonSliceState } from '../../redux/S
 const MyPokemonList: React.FC = () => {
   const favoritePokemon = useSelector((state: { favorite: PokemonSliceState }) => state.favorite.value);
   const dispatch = useDispatch();
-  console.log(favoritePokemon)
 
   const id = useMemo(() => favoritePokemon.map((pokemon: PokemonHome) => pokemon.id), [favoritePokemon]);
 
