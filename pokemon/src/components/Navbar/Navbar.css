@@ -6,3 +6,8 @@
 body {
   background: linear-gradient(to right, #6ed2d2,#d6a2d3);
 }
+
+.navButton.active {
+  background-color: rgb(248, 89, 89);
+}
+
