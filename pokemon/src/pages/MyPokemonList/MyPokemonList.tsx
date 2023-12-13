@@ -1,6 +1,6 @@
 import { PokemonHome } from '../../interface/interface';
 import { Grid } from '@mui/material';
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import {
   DndContext,
@@ -16,18 +16,34 @@ import {
   sortableKeyboardCoordinates,
 } from '@dnd-kit/sortable';
 import { SortableItem } from './SortableItem';
-import { useSelector, useDispatch } from 'react-redux';
-import { deleteFavorite, updateFavorite, PokemonSliceState } from '../../redux/Slice/pokemonSlice';
 
 const MyPokemonList: React.FC = () => {
-  const favoritePokemon = useSelector((state: { favorite: PokemonSliceState }) => state.favorite.value);
-  const dispatch = useDispatch();
+  const isLogin = localStorage.getItem('isLogin') ?? '';
+  const list = localStorage.getItem(isLogin) ?? '';
+  let fav: { data: PokemonHome[] } = { data: [] };
 
-  const id = useMemo(() => favoritePokemon.map((pokemon: PokemonHome) => pokemon.id), [favoritePokemon]);
+  try {
+    if (list) {
+      fav = JSON.parse(list);
+    }
+  } catch (error) {
+    console.error('Error parsing JSON:', error);
+    fav = { data: [] };
+  }
+
+
+  const [favoritePokemon, setFavoritePokemon] = useState<PokemonHome[]>(fav.data);
+
+  const id = useMemo(() => favoritePokemon.map((pokemon: any) => pokemon.id), [favoritePokemon]);
 
   const handleConfirmFavorite = (pokemon: PokemonHome) => {
     if (favoritePokemon.some((favPokemon: any) => favPokemon.id === pokemon.id)) {
-      dispatch(deleteFavorite(pokemon.id));
+      const index = fav.data.findIndex((favPokemon: any) => favPokemon.id === pokemon.id);
+      fav.data.splice(index, 1);
+      const updatedData = [...fav.data];
+      setFavoritePokemon(updatedData);
+      const newData = JSON.stringify({ username: isLogin, data: updatedData })
+      localStorage.setItem(isLogin, newData);
       toast.success('Delete success!');
     }
   };
@@ -45,12 +61,14 @@ const MyPokemonList: React.FC = () => {
       const oldIndex = favoritePokemon.findIndex((pokemon: any) => pokemon.id === active.id);
       const newIndex = favoritePokemon.findIndex((pokemon: any) => pokemon.id === over.id);
       const newFavoritePokemon = arrayMove(favoritePokemon, oldIndex, newIndex);
-      dispatch(updateFavorite(newFavoritePokemon));
+      setFavoritePokemon(newFavoritePokemon);
+      const newData = JSON.stringify({ username: isLogin, data: newFavoritePokemon })
+      localStorage.setItem(isLogin, newData);
     }
   };
 
   return (
-    <div style={{ padding: '80px 28px' }}>
+    <div style={{ padding: '75px 20px' }}>
       <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
         <Grid container spacing={2}>
           <SortableContext items={id}>

@@ -2,7 +2,7 @@ export interface PokemonHome {
   id: number;
   species: {
     name: string;
-  }
+  };
   sprites: {
     other: {
       home: {
@@ -10,6 +10,7 @@ export interface PokemonHome {
       };
     };
   };
+  stats: any
 }
 
 export interface Results {
