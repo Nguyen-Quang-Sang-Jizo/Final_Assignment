@@ -8,6 +8,7 @@ import "./Navbar.css";
 import { IconButton, Menu, MenuItem, Modal, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
 import { PokemonHome } from '../../interface/interface';
+import FilterListIcon from '@mui/icons-material/FilterList';
 
 const Navbar = () => {
   const location = useLocation();
@@ -109,6 +110,243 @@ const Navbar = () => {
               :
               <MenuItem onClick={handleLogin} sx={{ height: '20px' }}>Log in</MenuItem>
             }
+          </Menu>
+          <Button
+            sx={{ color: 'white' }}
+            aria-controls="simple-menu"
+            aria-haspopup="true"
+            onClick={handleClick}>
+            <FilterListIcon />
+          </Button>
+          <Typography>by Type</Typography>
+          <Menu
+            id="simple-menu"
+            anchorEl={anchorEl}
+            keepMounted
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+          >
+            <MenuItem sx={{
+              height: '30px',
+              textDecoration: 'none',
+              color: 'black',
+              '&:hover': {
+                backgroundColor: 'blue',
+              },
+            }}>
+              <Link to="/type/1" style={{
+                textDecoration: 'none',
+                color: 'black',
+              }}>Normal</Link>
+            </MenuItem>
+            <MenuItem sx={{
+              height: '30px',
+              textDecoration: 'none',
+              color: 'black',
+              '&:hover': {
+                backgroundColor: 'blue',
+              },
+            }}>
+              <Link to="/type/2" style={{
+                textDecoration: 'none',
+                color: 'black',
+              }}>Fighting</Link>
+            </MenuItem>
+            <MenuItem sx={{
+              height: '30px',
+              textDecoration: 'none',
+              color: 'black',
+              '&:hover': {
+                backgroundColor: 'blue',
+              },
+            }}>
+              <Link to="/type/3" style={{
+                textDecoration: 'none',
+                color: 'black',
+              }}>Flying</Link>
+            </MenuItem>
+            <MenuItem sx={{
+              height: '30px',
+              textDecoration: 'none',
+              color: 'black',
+              '&:hover': {
+                backgroundColor: 'blue',
+              },
+            }}>
+              <Link to="/type/4" style={{
+                textDecoration: 'none',
+                color: 'black',
+              }}>Poison</Link>
+            </MenuItem>
+            <MenuItem sx={{
+              height: '30px',
+              textDecoration: 'none',
+              color: 'black',
+              '&:hover': {
+                backgroundColor: 'blue',
+              },
+            }}>
+              <Link to="/type/5" style={{
+                textDecoration: 'none',
+                color: 'black',
+              }}>Ground</Link>
+            </MenuItem>
+            <MenuItem sx={{
+              height: '30px',
+              textDecoration: 'none',
+              color: 'black',
+              '&:hover': {
+                backgroundColor: 'blue',
+              },
+            }}>
+              <Link to="/type/5" style={{
+                textDecoration: 'none',
+                color: 'black',
+              }}>Rock</Link>
+            </MenuItem>
+            <MenuItem sx={{
+              height: '30px',
+              textDecoration: 'none',
+              color: 'black',
+              '&:hover': {
+                backgroundColor: 'blue',
+              },
+            }}>
+              <Link to="/type/6" style={{
+                textDecoration: 'none',
+                color: 'black',
+              }}>Bug</Link>
+            </MenuItem>
+            <MenuItem sx={{
+              height: '30px',
+              textDecoration: 'none',
+              color: 'black',
+              '&:hover': {
+                backgroundColor: 'blue',
+              },
+            }}>
+              <Link to="/type/7" style={{
+                textDecoration: 'none',
+                color: 'black',
+              }}>Ghost</Link>
+            </MenuItem>
+            <MenuItem sx={{
+              height: '30px',
+              textDecoration: 'none',
+              color: 'black',
+              '&:hover': {
+                backgroundColor: 'blue',
+              },
+            }}>
+              <Link to="/type/8" style={{
+                textDecoration: 'none',
+                color: 'black',
+              }}>Steel</Link>
+            </MenuItem>
+            <MenuItem sx={{
+              height: '30px',
+              textDecoration: 'none',
+              color: 'black',
+              '&:hover': {
+                backgroundColor: 'blue',
+              },
+            }}>
+              <Link to="/type/8" style={{
+                textDecoration: 'none',
+                color: 'black',
+              }}>Fire</Link>
+            </MenuItem>
+            <MenuItem sx={{
+              height: '30px',
+              textDecoration: 'none',
+              color: 'black',
+              '&:hover': {
+                backgroundColor: 'blue',
+              },
+            }}>
+              <Link to="/type/9" style={{
+                textDecoration: 'none',
+                color: 'black',
+              }}>Water</Link>
+            </MenuItem>
+            <MenuItem sx={{
+              height: '30px',
+              textDecoration: 'none',
+              color: 'black',
+              '&:hover': {
+                backgroundColor: 'blue',
+              },
+            }}>
+              <Link to="/type/10" style={{
+                textDecoration: 'none',
+                color: 'black',
+              }}>Grass</Link>
+            </MenuItem>
+            <MenuItem sx={{
+              height: '30px',
+              textDecoration: 'none',
+              color: 'black',
+              '&:hover': {
+                backgroundColor: 'blue',
+              },
+            }}>
+              <Link to="/type/11" style={{
+                textDecoration: 'none',
+                color: 'black',
+              }}>Psychic</Link>
+            </MenuItem>
+            <MenuItem sx={{
+              height: '30px',
+              textDecoration: 'none',
+              color: 'black',
+              '&:hover': {
+                backgroundColor: 'blue',
+              },
+            }}>
+              <Link to="/type/12" style={{
+                textDecoration: 'none',
+                color: 'black',
+              }}>Ice</Link>
+            </MenuItem>
+            <MenuItem sx={{
+              height: '30px',
+              textDecoration: 'none',
+              color: 'black',
+              '&:hover': {
+                backgroundColor: 'blue',
+              },
+            }}>
+              <Link to="/type/13" style={{
+                textDecoration: 'none',
+                color: 'black',
+              }}>Dragon</Link>
+            </MenuItem>
+            <MenuItem sx={{
+              height: '30px',
+              textDecoration: 'none',
+              color: 'black',
+              '&:hover': {
+                backgroundColor: 'blue',
+              },
+            }}>
+              <Link to="/type/14" style={{
+                textDecoration: 'none',
+                color: 'black',
+              }}>Dark</Link>
+            </MenuItem>
+            <MenuItem sx={{
+              height: '30px',
+              textDecoration: 'none',
+              color: 'black',
+              '&:hover': {
+                backgroundColor: 'blue',
+              },
+            }}>
+              <Link to="/type/15" style={{
+                textDecoration: 'none',
+                color: 'black',
+              }}>Fairy</Link>
+            </MenuItem>
           </Menu>
         </div>
         <Modal open={showLoginModal} onClose={handleModalClose} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
