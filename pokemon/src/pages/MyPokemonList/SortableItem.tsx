@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { PokemonHome } from '../../interface/interface';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import {
   Typography,
   Grid,
@@ -9,14 +10,13 @@ import {
   IconButton,
   CardMedia,
   Modal,
-  Button
+  Button,
+  Box
 } from '@mui/material';
-import FavoriteIcon from '@mui/icons-material/Favorite';
+import CatchingPokemonIcon from '@mui/icons-material/CatchingPokemon';
 import EditIcon from '@mui/icons-material/Edit';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux'
-import { updateNameFavorite } from '../../redux/Slice/pokemonSlice'
 
 
 interface Props {
@@ -25,10 +25,15 @@ interface Props {
 }
 
 export const SortableItem = ({ favoritePokemon, handleConfirmFavorite }: Props) => {
-  const dispatch = useDispatch()
   const navigate = useNavigate();
   const openModalRef = useRef(false);
   const openModalz = openModalRef.current;
+  const isLogin = localStorage.getItem('isLogin') ?? '';
+  const list = localStorage.getItem(isLogin) ?? '';
+  const fav = JSON.parse(list);
+  const [favPokemon, setFavoritePokemon] = useState(favoritePokemon.species.name);
+
+
 
   const handleNavigation = (value: any) => {
     navigate(value);
@@ -71,9 +76,13 @@ export const SortableItem = ({ favoritePokemon, handleConfirmFavorite }: Props) 
 
   const { register, handleSubmit, formState: { errors } } = useForm();
 
-  const Edit = (data: any) => {
-    dispatch(updateNameFavorite({ id: favoritePokemon.id, newName: data.name }));
-    handleCloseEditModal();
+  const Edit = async(data: any) => {
+    const index = fav.data.findIndex((favPokemon: any) => favPokemon.id === favoritePokemon.id);
+    const updatedData = [...fav.data]
+    updatedData[index].species.name = data.name;
+    await setFavoritePokemon(data.name);
+    const newData = JSON.stringify({ username: isLogin, data: updatedData })
+    localStorage.setItem(isLogin, newData); handleCloseEditModal();
   };
 
   return (
@@ -84,10 +93,7 @@ export const SortableItem = ({ favoritePokemon, handleConfirmFavorite }: Props) 
       {...listeners}
       item
       key={favoritePokemon.id}
-      xs={5}
-      sm={3}
-      md={2.4}
-      lg={1.5}
+      xs={5.85} sm={4} md={3} lg={2}
       sx={{
         padding: '10px',
       }}
@@ -100,54 +106,74 @@ export const SortableItem = ({ favoritePokemon, handleConfirmFavorite }: Props) 
           justifyContent: 'center',
           alignItems: 'center',
           backgroundColor: 'rgb(250, 230, 230)',
-          borderRadius: '25%',
-          width: '172px',
-          height: '172px'
+          borderRadius: '10px',
+          width: '215px',
+          height: '330px',
+          border: '10px solid white'
         }}
       >
-        <div onMouseUp={() => { handleNavigation(`/pokemon/${favoritePokemon.id}`) }}>
-          <CardMedia
-            component="img"
-            height="100px"
-            width="100px"
-            image={favoritePokemon?.sprites.other.home.front_default}
-            alt={favoritePokemon.species.name}
-            sx={{
-              transition: 'transform 0.2s ease',
-              '&:hover': {
-                transform: 'scale(1.2)',
-              },
-            }}
-          />
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', paddingLeft: '38px' }}>
-          <Typography variant="h6" component="h6" sx={{
-            mt: 1, fontFamily: 'Monaco',
-            fontSize: '20px',
-            overflow: 'hidden',
-            whiteSpace: 'nowrap',
-            textOverflow: 'ellipsis',
-            maxWidth: '100px'
-          }}
-          title={favoritePokemon.species.name}
-          >
-            {favoritePokemon.species.name}
-          </Typography>
+        <div style={{ position: 'relative' }}>
+          <div onMouseUp={() => { handleNavigation(`/pokemon/${favoritePokemon.id}`) }} style={{ position: 'absolute', top: -10, left: -30, color: 'grey' }} >
+            <InfoOutlinedIcon />
+          </div>
           <IconButton
-            sx={{ color: 'green', paddingRight: '0px', marginLeft: 'auto' }}
+            sx={{ color: 'grey', position: 'absolute', top: -10, right: -35, }}
             onMouseUp={handleOpenEditModal}
             title="Edit"
           >
             <EditIcon sx={{ width: '15x', height: '15px' }} />
           </IconButton>
+          <CardMedia
+            component="img"
+            height="150px"
+            width="150px"
+            image={favoritePokemon?.sprites.other.home.front_default}
+            alt={favoritePokemon.species?.name}
+          />
         </div>
         <IconButton
           sx={{ color: 'red' }}
           onMouseUp={handleOpenModal}
           title="Delete from My Pokemon List"
         >
-          <FavoriteIcon />
+          <CatchingPokemonIcon />
         </IconButton>
+        <div style={{ display: 'flex', alignItems: 'center', paddingLeft: 'auto' }}>
+          <Typography variant="h6" component="h6" sx={{
+            fontSize: '22px',
+            fontFamily: 'Restora, serif',
+            fontStyle: 'italic',
+            fontWeight: 'bold'
+          }}
+          >
+            {favPokemon.charAt(0).toUpperCase() + favPokemon.slice(1)}
+          </Typography>
+        </div>
+        {favoritePokemon.stats && (
+          <Box mt={2} display="flex" sx={{ fontFamily: 'Restora, serif', fontSize: '10px', fontWeight: 'bold' }}>
+            <Box>
+              <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '10px', fontWeight: 'bold' }}>HP:</Typography>
+              <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '10px', fontWeight: 'bold' }}>ATK:</Typography>
+              <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '10px', fontWeight: 'bold' }}>DEF:</Typography>
+            </Box>
+            <Box marginLeft={2}>
+              <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '10px', fontWeight: 'bold' }}>{favoritePokemon.stats[0].base_stat}</Typography>
+              <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '10px', fontWeight: 'bold' }}>{favoritePokemon.stats[1].base_stat}</Typography>
+              <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '10px', fontWeight: 'bold' }}>{favoritePokemon.stats[2].base_stat}</Typography>
+            </Box>
+            <Box marginLeft={4}>
+              <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '10px', fontWeight: 'bold' }}>SP-ATK:</Typography>
+              <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '10px', fontWeight: 'bold' }}>SP-DEF:</Typography>
+              <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '10px', fontWeight: 'bold' }}>SPD:</Typography>
+            </Box>
+            <Box marginLeft={2}>
+              <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '10px', fontWeight: 'bold' }}>{favoritePokemon.stats[3].base_stat}</Typography>
+              <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '10px', fontWeight: 'bold' }}>{favoritePokemon.stats[4].base_stat}</Typography>
+              <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '10px', fontWeight: 'bold' }}>{favoritePokemon.stats[5].base_stat}</Typography>
+            </Box>
+          </Box>
+
+        )}
       </Paper>
       <Modal
         open={openModal}
@@ -195,8 +221,9 @@ export const SortableItem = ({ favoritePokemon, handleConfirmFavorite }: Props) 
             padding: '20px',
             borderRadius: '5px',
             outline: 'none',
-            width: '300px',
+            width: '400px',
             textAlign: 'center',
+            height: '150px',
           }}
         >
           <Typography variant="h6" id="edit-modal-title">
@@ -204,16 +231,24 @@ export const SortableItem = ({ favoritePokemon, handleConfirmFavorite }: Props) 
           </Typography>
           <form onSubmit={handleSubmit(Edit)}>
             <input
-              placeholder='Pokemion Name ...'
+              placeholder='Name ...'
               type="text"
               defaultValue={favoritePokemon.species.name}
-              {...register('name', { required: true, maxLength: 20 })}
+              {...register('name', { required: true, maxLength: 11 })}
+              style={{
+                width: '100%',
+                height: '50px',
+                fontSize: '25px',
+                fontFamily: 'Restora, serif',
+                fontStyle: 'italic',
+                fontWeight: 'bold'
+              }}
             />
             <br />
-            {errors.name && <span>0 &lt; character &lt; 20</span>}
+            {errors.name && <span style={{ fontFamily: 'Restora, serif', fontSize: '20px', fontWeight: 'bold' }}>0 &lt; character &lt; 11</span>}
             <br />
             <Button onClick={handleCloseEditModal}>Cancel</Button>
-            <Button type="submit">Save</Button>
+            <Button type="submit" sx={{ color: 'green' }}>Save</Button>
           </form>
         </div>
       </Modal>

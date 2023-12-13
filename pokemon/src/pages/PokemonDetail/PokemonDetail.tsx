@@ -1,16 +1,29 @@
-import { Box, Typography, Grid, CardMedia, IconButton } from "@mui/material";
+import { Box, Typography, Grid, CardMedia, IconButton, Paper } from "@mui/material";
 import { useParams } from 'react-router-dom';
 import { useQuery } from "@tanstack/react-query";
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import { useSelector, useDispatch } from 'react-redux'
-import { addFavorite, deleteFavorite } from '../../redux/Slice/pokemonSlice'
 import { PokemonHome } from "../../interface/interface";
 import { ToastContainer, toast } from 'react-toastify';
+import { useState } from "react";
+import CatchingPokemonIcon from '@mui/icons-material/CatchingPokemon';
 
 const PokemonDetail = () => {
-    const favoritePokemon = useSelector((state: any) => state.favorite.value)
-    const dispatch = useDispatch()
+    const isLogin = localStorage.getItem('isLogin') ?? '';
+    const list = localStorage.getItem(isLogin) ?? '';
+    let fav: { data: PokemonHome[] } = { data: [] };
+
+    try {
+        if (list) {
+            fav = JSON.parse(list);
+        }
+    } catch (error) {
+        console.error('Error parsing JSON:', error);
+        fav = { data: [] };
+    }
+
+    const [favoritePokemon, setFavoritePokemon] = useState<PokemonHome[]>(fav.data);
+
     const { id } = useParams();
     const { isLoading, isError, data: pokemonData = [], error } = useQuery({
         queryKey: ['pokeData'],
@@ -20,11 +33,24 @@ const PokemonDetail = () => {
     });
 
     const handleFavoriteClick = async (pokemon: PokemonHome) => {
+        if (isLogin == '') {
+            toast.warning('Please log in to add to My Pokemon List');
+            return;
+        }
         if (favoritePokemon.some((favPokemon: any) => favPokemon.id === pokemon.id)) {
-            dispatch(deleteFavorite(pokemon.id));
+            const index = fav.data.findIndex((favPokemon: any) => favPokemon.id === pokemon.id);
+            fav.data.splice(index, 1);
+            const updatedData = [...fav.data]
+            setFavoritePokemon(updatedData);
+            const newData = JSON.stringify({ username: isLogin, data: updatedData })
+            localStorage.setItem(isLogin, newData);
             toast.success('Delete success!');
         } else {
-            dispatch(addFavorite(pokemon));
+            fav.data.push(pokemon);
+            const updatedData = [...fav.data]
+            setFavoritePokemon(updatedData);
+            const newData = JSON.stringify({ username: isLogin, data: updatedData })
+            localStorage.setItem(isLogin, newData);
             toast.success('Add to success!');
         }
     };
@@ -44,7 +70,7 @@ const PokemonDetail = () => {
         return <span>Error: {error.message}</span>;
     }
 
-    const isFavorite = favoritePokemon.some((favPokemon: any) => favPokemon.id === pokemonData.id);
+    const isFavorite = isLogin ? favoritePokemon.some((favPokemon: any) => favPokemon.id === pokemonData.id) : false;
 
     const getFlavorSpeech = () => {
         const enLang = pokemonSpecies?.flavor_text_entries?.filter(
@@ -64,138 +90,158 @@ const PokemonDetail = () => {
     const flavorSpeech = getFlavorSpeech();
 
     return (
-        <div style={{ padding: '140px 30px 0px 70px'}}>
-            <Grid container spacing={5}
-            sx={{background:'#ffffff', borderRadius:'10px'}}
+        <div style={{
+            alignItems: 'center',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            paddingTop: '75px'
+        }}>
+            <Paper
+                elevation={7}
+                sx={{
+                    backgroundColor: 'rgb(250, 230, 230)',
+                    width: '700px',
+                    height: '680px',
+                    border: '15px solid white',
+                    borderRadius: '10px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                }}
+                className='paper'
             >
-                <Grid item xs={4}
-                    sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                    }}
+                <div>
+                <CardMedia
+                    component="img"
+                    height="200"
+                    width="200"
+                    image={pokemonData?.sprites.other.home.front_default}
+                    alt={pokemonData?.species.name}
+                />
+                </div>
+                <Typography variant="h6" component="h6" sx={{ mt: 2, fontFamily: 'Restora, serif', fontStyle: 'italic',fontSize: '2rem', fontWeight: 'bold', textAlign: 'center' }}>
+                    {pokemonData?.species?.name}
+                </Typography>
+                <IconButton
+                    sx={{ color: isFavorite ? 'red' : 'grey', marginTop: '-10px' }}
+                    aria-label="favorite"
+                    onClick={() => handleFavoriteClick(pokemonData)}
+                    title={isFavorite ? 'Delete from My Pokemon List' : 'Add to My Pokemon List'}
                 >
-                    <CardMedia
-                        component="img"
-                        height="500"
-                        width="500"
-                        image={pokemonData?.sprites.other.home.front_default}
-                        alt={pokemonData?.species.name}
-                        sx={{ paddingBottom: '10px' }}
-                    />
-                    <Typography variant="h6" component="h6" sx={{ mt: 1, fontSize: '50px' }}>
-                        {pokemonData?.species?.name}
-                    </Typography>
-                    <IconButton
-                        sx={{ color: isFavorite ? 'red' : 'grey' }}
-                        aria-label="favorite"
-                        onClick={() => handleFavoriteClick(pokemonData)}
-                        title={isFavorite ? 'Delete from My Pokemon List' : 'Add to My Pokemon List'}
-                    >
-                        {isFavorite ? <FavoriteIcon /> : <FavoriteBorderOutlinedIcon />}
-                    </IconButton>
-                </Grid>
-                <Grid item xs={8}>
-                    <Grid container spacing={2}>
-                        <Grid item>
-                            <Grid container spacing={19}>
-                                <Grid item xs={6}>
-                                    <Typography>
-                                        <Typography sx={{ fontSize: '50px' }}>
-                                            Bio
-                                        </Typography>
-                                        <Typography sx={{ mt: 1 }}>
-                                            {flavorSpeech}
-                                        </Typography>
+                    {isFavorite ? <CatchingPokemonIcon /> : <CatchingPokemonIcon />}
+                </IconButton>
+                <Typography sx={{fontFamily: 'Restora, serif', fontSize: '1.5rem', fontWeight: 'bold', marginTop: '-10px', textAlign: 'center' }}>
+                    Bio
+                </Typography>
+                <Box mt={2} display="flex" justifyContent="center">
+                    <Box sx={{width:'180px', height:'100px'}}>
+                        <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'normal', lineHeight: '1.5' }}>
+                            {flavorSpeech}
+                        </Typography>
+                    </Box>
+                    <Box marginLeft={10}>
+                        <Box mt={2} display="flex" justifyContent="center">
+                            <Box>
+                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'bold', marginTop: '-18px' }}>Genus:</Typography>
+                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'bold', marginTop: '6px' }}>Weight:</Typography>
+                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'bold', marginTop: '6px' }}>Height:</Typography>
+                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'bold', marginTop: '6px' }}>Abilities:</Typography>
+                            </Box>
+                            <Box marginLeft={2}>
+                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'normal', marginTop: '-18px' }}>
+                                    {pokemonSpecies?.genera?.filter((entry: any) => entry.language.name === "en")[0].genus}
+                                </Typography>
+                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'normal', marginTop: '6px' }}>
+                                    {pokemonData.weight / 10}kg
+                                </Typography>
+                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'normal', marginTop: '6px' }}>
+                                    {pokemonData.height / 10}m
+                                </Typography>
+                                {pokemonData.abilities.map((ability: any) => (
+                                    <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'normal', marginTop: '6px' }} key={ability.slot}>
+                                        {ability.ability.name}
                                     </Typography>
-                                    <Typography display="flex" alignItems="center">
-                                        <Typography style={{ marginRight: '40px' }}>
-                                            Genus:
+                                ))}
+                            </Box>
+                        </Box>
+                    </Box>
+                </Box>
+                <Box mt={2} display="flex" justifyContent="center">
+                    <Box>
+                        <Typography sx={{fontFamily: 'Restora, serif',  fontSize: '1.5rem', fontWeight: 'bold', marginTop: '20px', textAlign: 'center' }}>
+                            Training
+                        </Typography>
+                        <Box mt={2} display="flex" justifyContent="center">
+                            <Box>
+                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'bold' }}>Base Exp:</Typography>
+                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'bold', marginTop: '2px' }}>Base Happiness:</Typography>
+                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'bold', marginTop: '2px' }}>Capture Rate:</Typography>
+                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'bold', marginTop: '2px' }}>Growth Rate:</Typography>
+                            </Box>
+                            <Box marginLeft={2}>
+                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'normal' }}>
+                                    {pokemonData?.base_experience}
+                                </Typography>
+                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'normal', marginTop: '2px' }}>
+                                    {pokemonSpecies?.base_happiness}
+                                </Typography>
+                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'normal', marginTop: '2px' }}>
+                                    {pokemonSpecies?.capture_rate}
+                                </Typography>
+                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'normal', marginTop: '2px' }}>
+                                    {pokemonSpecies?.growth_rate?.name}
+                                </Typography>
+                            </Box>
+                        </Box>
+                    </Box>
+                    <Box marginLeft={10}>
+                        {pokemonData.stats && (
+                            <Box mt={2}>
+                                <Typography sx={{fontFamily: 'Restora, serif', fontSize: '1.5rem', fontWeight: 'bold', marginTop: '20px', textAlign: 'center' }}>
+                                    Stats
+                                </Typography>
+                                <Box mt={2} display="flex" justifyContent="center">
+                                    <Box>
+                                        <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'bold' }}>HP:</Typography>
+                                        <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'bold', marginTop: '10px' }}>ATK:</Typography>
+                                        <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'bold', marginTop: '10px' }}>DEF:</Typography>
+                                    </Box>
+                                    <Box marginLeft={2}>
+                                        <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'normal' }}>
+                                            {pokemonData.stats[0].base_stat}
                                         </Typography>
-                                        <Typography>
-                                            {pokemonSpecies?.genera?.filter((entry: any) => entry.language.name === "en")[0].genus}
+                                        <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'normal', marginTop: '10px' }}>
+                                            {pokemonData.stats[1].base_stat}
                                         </Typography>
-                                    </Typography>
-                                    <Typography display="flex" alignItems="center">
-                                        <Typography style={{ marginRight: '40px' }}>
-                                            Weight:
+                                        <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'normal', marginTop: '10px' }}>
+                                            {pokemonData.stats[2].base_stat}
                                         </Typography>
-                                        <Typography>
-                                            {pokemonData.weight / 10}kg
+                                    </Box>
+                                    <Box marginLeft={4}>
+                                        <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'bold' }}>SP-ATK:</Typography>
+                                        <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'bold', marginTop: '10px' }}>SP-DEF:</Typography>
+                                        <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'bold', marginTop: '10px' }}>SPD:</Typography>
+                                    </Box>
+                                    <Box marginLeft={2}>
+                                        <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'normal' }}>
+                                            {pokemonData.stats[3].base_stat}
                                         </Typography>
-                                    </Typography>
-                                    <Typography display="flex" alignItems="center">
-                                        <Typography style={{ marginRight: '40px' }}>
-                                            Height:
+                                        <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'normal', marginTop: '10px' }}>
+                                            {pokemonData.stats[4].base_stat}
                                         </Typography>
-                                        <Typography>
-                                            {pokemonData.height / 10}m
+                                        <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'normal', marginTop: '10px' }}>
+                                            {pokemonData.stats[5].base_stat}
                                         </Typography>
-                                    </Typography>
-                                    <Typography display="flex" alignItems="center">Abilities: {pokemonData.abilities.map((ability: any) => (
-                                        <Typography style={{ marginLeft: '30px' }} key={ability.slot}>{ability.ability.name}</Typography>
-                                    ))}</Typography>
-                                </Grid>
-                                <Grid item xs={6}>
-                                    <Typography sx={{ fontSize: '50px' }}>
-                                        Training
-                                    </Typography>
-                                    <Typography sx={{ mt: 1 }} display="flex" alignItems="center">
-                                        <Typography style={{ marginRight: '100px' }}>
-                                            Base Exp:
-                                        </Typography>
-                                        <Typography>
-                                            {pokemonData?.base_experience}
-                                        </Typography>
-                                    </Typography>
-                                    <Typography display="flex" alignItems="center">
-                                        <Typography style={{ marginRight: '50px' }}>
-                                            Base Happiness:
-                                        </Typography>
-                                        <Typography>
-                                            {pokemonSpecies?.base_happiness}
-                                        </Typography>
-                                    </Typography>
-                                    <Typography display="flex" alignItems="center">
-                                        <Typography style={{ marginRight: '75px' }}>
-                                            Capture Rate:
-                                        </Typography>
-                                        <Typography>
-                                            {pokemonSpecies?.capture_rate}
-                                        </Typography>
-                                    </Typography>
-                                    <Typography display="flex" alignItems="center">
-                                        <Typography style={{ marginRight: '80px' }}>
-                                            Growth Rate:
-                                        </Typography>
-                                        <Typography>
-                                            {pokemonSpecies?.growth_rate?.name}
-                                        </Typography>
-                                    </Typography>
-                                </Grid>
-                            </Grid>
-                        </Grid>
-                        <Grid item xs={12}>
-                            {pokemonData.stats && (
-                                <Box mt={2}>
-                                    <Typography sx={{ fontSize: '50px' }}>Stats</Typography>
-                                    <Typography display="flex" alignItems="center">
-                                        {pokemonData.stats.map((stat: any) => (
-                                            <Box key={stat.stat.name} style={{ marginRight: '80px' }}>
-                                                <Typography>{stat.stat.name}:</Typography>
-                                                <Typography>{stat.base_stat}</Typography>
-                                            </Box>
-                                        ))}
-                                    </Typography>
+                                    </Box>
                                 </Box>
-                            )}
-                        </Grid>
-                    </Grid>
-                </Grid>
-            </Grid>
+                            </Box>
+                        )}
+                    </Box>
+                </Box>
+            </Paper>
             <ToastContainer autoClose={1000} />
-        </div>
+        </div >
     );
 };
 

@@ -2,12 +2,61 @@ import { Link, useLocation } from 'react-router-dom';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
+import CloseIcon from '@mui/icons-material/Close'
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import "./Navbar.css";
+import { IconButton, Menu, MenuItem, Modal, TextField, Typography } from '@mui/material';
+import { useState } from 'react';
+import { PokemonHome } from '../../interface/interface';
 
 const Navbar = () => {
   const location = useLocation();
   const isCurrentPage = (pathname: string) => {
     return location.pathname === pathname;
+  };
+
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [username, setUsername] = useState(localStorage.getItem('isLogin'));
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [inputUsername, setInputUsername] = useState('');
+
+  const handleClick = (event: any) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleLogout = () => {
+    setAnchorEl(null);
+    setUsername('');
+    localStorage.setItem('isLogin', '');
+  };
+
+  const handleLogin = () => {
+    setAnchorEl(null);
+    setShowLoginModal(true);
+  };
+
+  const handleModalClose = () => {
+    setShowLoginModal(false);
+  };
+
+  const handleLoginClick = () => {
+    const test = localStorage.getItem(inputUsername);
+    if (test) {
+      setUsername(inputUsername);
+      localStorage.setItem(inputUsername, test);
+      localStorage.setItem('isLogin', inputUsername);
+      setShowLoginModal(false);
+    } else {
+      setUsername(inputUsername);
+      const user = { username: inputUsername, data: [] }
+      localStorage.setItem(inputUsername, JSON.stringify(user));
+      localStorage.setItem('isLogin', inputUsername);
+      setShowLoginModal(false);
+    }
   };
 
   return (
@@ -24,21 +73,64 @@ const Navbar = () => {
             className={`navButton ${isCurrentPage('/') ? 'active' : ''}`}
             component={Link} to="/"
             color="inherit">
-            Home
+            <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '20px', fontWeight: 'bold' }}>HOME</Typography>
           </Button>
           <Button
             className={`navButton ${isCurrentPage('/pokemon') ? 'active' : ''}`}
             component={Link} to="/pokemon"
             color="inherit">
-            Pokemon List
+            <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '20px', fontWeight: 'bold' }}>POKEMON LIST</Typography>
           </Button>
           <Button
             className={`navButton ${isCurrentPage('/my-pokemon') ? 'active' : ''}`}
             component={Link} to="/my-pokemon"
             color="inherit">
-            My Pokemon List
+            <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '20px', fontWeight: 'bold' }}>MY POKEMON LIST</Typography>
           </Button>
         </nav>
+        <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center' }}>
+          <Typography>{username}</Typography>
+          <Button
+            sx={{ color: 'white' }}
+            aria-controls="simple-menu"
+            aria-haspopup="true"
+            onClick={handleClick}>
+            <AccountCircleIcon />
+          </Button>
+          <Menu
+            id="simple-menu"
+            anchorEl={anchorEl}
+            keepMounted
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+          >
+            {username ?
+              <MenuItem onClick={handleLogout} sx={{ height: '20px' }}>Log out</MenuItem>
+              :
+              <MenuItem onClick={handleLogin} sx={{ height: '20px' }}>Log in</MenuItem>
+            }
+          </Menu>
+        </div>
+        <Modal open={showLoginModal} onClose={handleModalClose} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div className="modal-container" style={{ backgroundColor: 'white', padding: '20px', borderRadius: '8px', position: 'relative', height: '200px' }}>
+            <IconButton
+              aria-label="close"
+              onClick={handleModalClose}
+              style={{}}
+            >
+              <CloseIcon />
+            </IconButton>
+            <TextField
+              label="Username"
+              variant="outlined"
+              onChange={(e) => setInputUsername(e.target.value)}
+              style={{ marginBottom: '16px', width: '100%' }}
+            />
+            <Button variant="contained" onClick={handleLoginClick} style={{ width: '100%' }}>
+              Log in
+            </Button>
+          </div>
+        </Modal>
       </Toolbar>
     </AppBar>
   );
