@@ -17,6 +17,7 @@ const Navbar = () => {
   };
 
   const [anchorEl, setAnchorEl] = useState(null);
+  const [anchorEl1, setAnchorEl1] = useState(null);
   const [username, setUsername] = useState(localStorage.getItem('isLogin'));
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [inputUsername, setInputUsername] = useState('');
@@ -25,8 +26,16 @@ const Navbar = () => {
     setAnchorEl(event.currentTarget);
   };
 
+  const handleClick1 = (event: any) => {
+    setAnchorEl1(event.currentTarget);
+  };
+
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleClose1 = () => {
+    setAnchorEl1(null);
   };
 
   const handleLogout = () => {
@@ -115,16 +124,16 @@ const Navbar = () => {
             sx={{ color: 'white' }}
             aria-controls="simple-menu"
             aria-haspopup="true"
-            onClick={handleClick}>
+            onClick={handleClick1}>
             <FilterListIcon />
           </Button>
           <Typography>by Type</Typography>
           <Menu
             id="simple-menu"
-            anchorEl={anchorEl}
+            anchorEl={anchorEl1}
             keepMounted
-            open={Boolean(anchorEl)}
-            onClose={handleClose}
+            open={Boolean(anchorEl1)}
+            onClose={handleClose1}
           >
             <MenuItem sx={{
               height: '30px',
