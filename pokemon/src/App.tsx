@@ -6,22 +6,35 @@ import PokemonDetail from './pages/PokemonDetail/PokemonDetail';
 import Navbar from './components/Navbar/Navbar';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import TypePokemon from "./pages/Type/Type";
+import { useState } from "react";
 const queryClient = new QueryClient()
 
-
-
-
 function App() {
+  const [refreshComponent, setRefreshComponent] = useState(false);
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Navbar />
+      <Navbar
+        setRefreshComponent={setRefreshComponent}
+        refreshComponent={refreshComponent} />
       <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/pokemon" element={<PokemonList/>} />
-        <Route path="/my-pokemon" element={<MyPokemonList/>} />
-        <Route path="/pokemon/:id" element={<PokemonDetail />} />
-        <Route path="/type/:id" element={<TypePokemon />} />
+        <Route path="/" element={<HomePage
+          setRefreshComponent={setRefreshComponent}
+          refreshComponent={refreshComponent}
+          refresh={refreshComponent}
+        />} />
+        <Route path="/pokemon" element={<PokemonList
+          refresh={refreshComponent}
+        />} />
+        <Route path="/my-pokemon" element={<MyPokemonList
+          refresh={refreshComponent}
+        />} />
+        <Route path="/pokemon/:id" element={<PokemonDetail
+          refresh={refreshComponent}
+        />} />
+        <Route path="/pokemon/type/:id" element={<TypePokemon
+          refresh={refreshComponent}
+        />} />
       </Routes>
     </QueryClientProvider>
   )

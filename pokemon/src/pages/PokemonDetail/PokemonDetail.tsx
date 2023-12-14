@@ -1,14 +1,16 @@
-import { Box, Typography, Grid, CardMedia, IconButton, Paper } from "@mui/material";
+import { Box, Typography, CardMedia, IconButton, Paper } from "@mui/material";
 import { useParams } from 'react-router-dom';
 import { useQuery } from "@tanstack/react-query";
-import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
-import FavoriteIcon from '@mui/icons-material/Favorite';
 import { PokemonHome } from "../../interface/interface";
 import { ToastContainer, toast } from 'react-toastify';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CatchingPokemonIcon from '@mui/icons-material/CatchingPokemon';
 
-const PokemonDetail = () => {
+interface Props {
+    refresh: boolean;
+}
+
+const PokemonDetail = ({ refresh }: Props) => {
     const isLogin = localStorage.getItem('isLogin') ?? '';
     const list = localStorage.getItem(isLogin) ?? '';
     let fav: { data: PokemonHome[] } = { data: [] };
@@ -24,6 +26,10 @@ const PokemonDetail = () => {
 
     const [favoritePokemon, setFavoritePokemon] = useState<PokemonHome[]>(fav.data);
 
+    useEffect(() => {
+        setFavoritePokemon(fav.data)
+    }, [refresh])
+
     const { id } = useParams();
     const { isLoading, isError, data: pokemonData = [], error } = useQuery({
         queryKey: ['pokeData'],
@@ -34,7 +40,7 @@ const PokemonDetail = () => {
 
     const handleFavoriteClick = async (pokemon: PokemonHome) => {
         if (isLogin == '') {
-            toast.warning('Please log in to add to My Pokemon List');
+            toast.warning('Please log in');
             return;
         }
         if (favoritePokemon.some((favPokemon: any) => favPokemon.id === pokemon.id)) {
@@ -82,8 +88,7 @@ const PokemonDetail = () => {
         const types = pokeData.join(" and ")
         const legend = pokemonSpecies.is_legendary ? " legendary, " : ""
         const mythic = pokemonSpecies.is_mythical ? " mythical, " : ""
-        const text = `${pokemonData.name
-            }, ${legend}${mythic}${types} type pokemon. ${enLang?.flavor_text?.replace(/\r?\n|\r/g, " ")}`
+        const text = `${pokemonData?.species.name.charAt(0).toUpperCase() + pokemonData?.species.name.slice(1)}, ${legend}${mythic}${types} type pokemon. ${enLang?.flavor_text?.replace(/\r?\n|\r/g, " ")}`
         return text
     }
 
@@ -112,16 +117,16 @@ const PokemonDetail = () => {
                 className='paper'
             >
                 <div>
-                <CardMedia
-                    component="img"
-                    height="200"
-                    width="200"
-                    image={pokemonData?.sprites.other.home.front_default}
-                    alt={pokemonData?.species.name}
-                />
+                    <CardMedia
+                        component="img"
+                        height="200"
+                        width="200"
+                        image={pokemonData?.sprites.other.home.front_default}
+                        alt={pokemonData?.species.name}
+                    />
                 </div>
-                <Typography variant="h6" component="h6" sx={{ mt: 2, fontFamily: 'Restora, serif', fontStyle: 'italic',fontSize: '2rem', fontWeight: 'bold', textAlign: 'center' }}>
-                    {pokemonData?.species?.name}
+                <Typography variant="h6" component="h6" sx={{ mt: 0, fontFamily: 'Restora, serif', fontStyle: 'italic', fontSize: '2rem', fontWeight: 'bold', textAlign: 'center' }}>
+                    {pokemonData?.species.name.charAt(0).toUpperCase() + pokemonData?.species.name.slice(1)}
                 </Typography>
                 <IconButton
                     sx={{ color: isFavorite ? 'red' : 'grey', marginTop: '-10px' }}
@@ -131,35 +136,35 @@ const PokemonDetail = () => {
                 >
                     {isFavorite ? <CatchingPokemonIcon /> : <CatchingPokemonIcon />}
                 </IconButton>
-                <Typography sx={{fontFamily: 'Restora, serif', fontSize: '1.5rem', fontWeight: 'bold', marginTop: '-10px', textAlign: 'center' }}>
+                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '2rem', fontWeight: 'bold', marginTop: '-10px', textAlign: 'center' }}>
                     Bio
                 </Typography>
-                <Box mt={2} display="flex" justifyContent="center">
-                    <Box sx={{width:'180px', height:'100px'}}>
-                        <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'normal', lineHeight: '1.5' }}>
+                <Box mt={0} display="flex" justifyContent="center">
+                    <Box sx={{ width: '300px', height: '80px' }} marginLeft={5}>
+                        <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'bold', lineHeight: '1.5' }}>
                             {flavorSpeech}
                         </Typography>
                     </Box>
-                    <Box marginLeft={10}>
+                    <Box marginLeft={5}>
                         <Box mt={2} display="flex" justifyContent="center">
                             <Box>
-                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'bold', marginTop: '-18px' }}>Genus:</Typography>
-                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'bold', marginTop: '6px' }}>Weight:</Typography>
-                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'bold', marginTop: '6px' }}>Height:</Typography>
-                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'bold', marginTop: '6px' }}>Abilities:</Typography>
+                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1.1rem', fontWeight: 'bold', marginTop: '-18px' }}>Genus:</Typography>
+                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1.1rem', fontWeight: 'bold', marginTop: '3px' }}>Weight:</Typography>
+                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1.1rem', fontWeight: 'bold', marginTop: '3px' }}>Height:</Typography>
+                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1.1rem', fontWeight: 'bold', marginTop: '3px' }}>Abilities:</Typography>
                             </Box>
                             <Box marginLeft={2}>
-                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'normal', marginTop: '-18px' }}>
+                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'bold', marginTop: '-18px' }}>
                                     {pokemonSpecies?.genera?.filter((entry: any) => entry.language.name === "en")[0].genus}
                                 </Typography>
-                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'normal', marginTop: '6px' }}>
+                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'bold', marginTop: '6px' }}>
                                     {pokemonData.weight / 10}kg
                                 </Typography>
-                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'normal', marginTop: '6px' }}>
+                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'bold', marginTop: '6px' }}>
                                     {pokemonData.height / 10}m
                                 </Typography>
                                 {pokemonData.abilities.map((ability: any) => (
-                                    <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'normal', marginTop: '6px' }} key={ability.slot}>
+                                    <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'bold', marginTop: '6px' }} key={ability.slot}>
                                         {ability.ability.name}
                                     </Typography>
                                 ))}
@@ -169,27 +174,27 @@ const PokemonDetail = () => {
                 </Box>
                 <Box mt={2} display="flex" justifyContent="center">
                     <Box>
-                        <Typography sx={{fontFamily: 'Restora, serif',  fontSize: '1.5rem', fontWeight: 'bold', marginTop: '20px', textAlign: 'center' }}>
+                        <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1.5rem', fontWeight: 'bold', marginTop: '20px', textAlign: 'center' }}>
                             Training
                         </Typography>
-                        <Box mt={2} display="flex" justifyContent="center">
+                        <Box mt={0} display="flex" justifyContent="center">
                             <Box>
-                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'bold' }}>Base Exp:</Typography>
-                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'bold', marginTop: '2px' }}>Base Happiness:</Typography>
-                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'bold', marginTop: '2px' }}>Capture Rate:</Typography>
-                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'bold', marginTop: '2px' }}>Growth Rate:</Typography>
+                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1.1rem', fontWeight: 'bold' }}>Base Exp:</Typography>
+                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1.1rem', fontWeight: 'bold', marginTop: '2px' }}>Base Happiness:</Typography>
+                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1.1rem', fontWeight: 'bold', marginTop: '2px' }}>Capture Rate:</Typography>
+                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1.1rem', fontWeight: 'bold', marginTop: '2px' }}>Growth Rate:</Typography>
                             </Box>
                             <Box marginLeft={2}>
-                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'normal' }}>
+                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'bold' }}>
                                     {pokemonData?.base_experience}
                                 </Typography>
-                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'normal', marginTop: '2px' }}>
+                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'bold', marginTop: '5px' }}>
                                     {pokemonSpecies?.base_happiness}
                                 </Typography>
-                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'normal', marginTop: '2px' }}>
+                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'bold', marginTop: '5px' }}>
                                     {pokemonSpecies?.capture_rate}
                                 </Typography>
-                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'normal', marginTop: '2px' }}>
+                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'bold', marginTop: '5px' }}>
                                     {pokemonSpecies?.growth_rate?.name}
                                 </Typography>
                             </Box>
@@ -198,23 +203,23 @@ const PokemonDetail = () => {
                     <Box marginLeft={10}>
                         {pokemonData.stats && (
                             <Box mt={2}>
-                                <Typography sx={{fontFamily: 'Restora, serif', fontSize: '1.5rem', fontWeight: 'bold', marginTop: '20px', textAlign: 'center' }}>
+                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1.5rem', fontWeight: 'bold', marginTop: '20px', textAlign: 'center' }}>
                                     Stats
                                 </Typography>
-                                <Box mt={2} display="flex" justifyContent="center">
+                                <Box mt={0} display="flex" justifyContent="center">
                                     <Box>
-                                        <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'bold' }}>HP:</Typography>
-                                        <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'bold', marginTop: '10px' }}>ATK:</Typography>
-                                        <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'bold', marginTop: '10px' }}>DEF:</Typography>
+                                        <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1.1rem', fontWeight: 'bold' }}>HP:</Typography>
+                                        <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1.1rem', fontWeight: 'bold', marginTop: '7px' }}>ATK:</Typography>
+                                        <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1.1rem', fontWeight: 'bold', marginTop: '7px' }}>DEF:</Typography>
                                     </Box>
                                     <Box marginLeft={2}>
-                                        <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'normal' }}>
+                                        <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'bold' }}>
                                             {pokemonData.stats[0].base_stat}
                                         </Typography>
-                                        <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'normal', marginTop: '10px' }}>
+                                        <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'bold', marginTop: '10px' }}>
                                             {pokemonData.stats[1].base_stat}
                                         </Typography>
-                                        <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'normal', marginTop: '10px' }}>
+                                        <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'bold', marginTop: '10px' }}>
                                             {pokemonData.stats[2].base_stat}
                                         </Typography>
                                     </Box>
@@ -224,13 +229,13 @@ const PokemonDetail = () => {
                                         <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'bold', marginTop: '10px' }}>SPD:</Typography>
                                     </Box>
                                     <Box marginLeft={2}>
-                                        <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'normal' }}>
+                                        <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'bold' }}>
                                             {pokemonData.stats[3].base_stat}
                                         </Typography>
-                                        <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'normal', marginTop: '10px' }}>
+                                        <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'bold', marginTop: '10px' }}>
                                             {pokemonData.stats[4].base_stat}
                                         </Typography>
-                                        <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'normal', marginTop: '10px' }}>
+                                        <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'bold', marginTop: '10px' }}>
                                             {pokemonData.stats[5].base_stat}
                                         </Typography>
                                     </Box>

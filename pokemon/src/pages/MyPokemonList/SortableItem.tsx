@@ -76,7 +76,7 @@ export const SortableItem = ({ favoritePokemon, handleConfirmFavorite }: Props) 
 
   const { register, handleSubmit, formState: { errors } } = useForm();
 
-  const Edit = async(data: any) => {
+  const Edit = async (data: any) => {
     const index = fav.data.findIndex((favPokemon: any) => favPokemon.id === favoritePokemon.id);
     const updatedData = [...fav.data]
     updatedData[index].species.name = data.name;
@@ -113,11 +113,13 @@ export const SortableItem = ({ favoritePokemon, handleConfirmFavorite }: Props) 
         }}
       >
         <div style={{ position: 'relative' }}>
-          <div onMouseUp={() => { handleNavigation(`/pokemon/${favoritePokemon.id}`) }} style={{ position: 'absolute', top: -10, left: -30, color: 'grey' }} >
-            <InfoOutlinedIcon />
+          <div onMouseUp={() => { handleNavigation(`/pokemon/${favoritePokemon.id}`) }} style={{ position: 'absolute', top: -15, left: -40, color: 'grey' }} >
+            <IconButton>
+              <InfoOutlinedIcon />
+            </IconButton>
           </div>
           <IconButton
-            sx={{ color: 'grey', position: 'absolute', top: -10, right: -35, }}
+            sx={{ color: 'grey', position: 'absolute', top: -13, right: -40, }}
             onMouseUp={handleOpenEditModal}
             title="Edit"
           >
@@ -138,38 +140,38 @@ export const SortableItem = ({ favoritePokemon, handleConfirmFavorite }: Props) 
         >
           <CatchingPokemonIcon />
         </IconButton>
-        <div style={{ display: 'flex', alignItems: 'center', paddingLeft: 'auto' }}>
+        <div style={{ marginTop: -10, display: 'flex', alignItems: 'center', paddingLeft: 'auto' }}>
           <Typography variant="h6" component="h6" sx={{
-            fontSize: '22px',
+            fontSize: '30px',
             fontFamily: 'Restora, serif',
             fontStyle: 'italic',
-            fontWeight: 'bold'
+            fontWeight: 'bold',
           }}
           >
             {favPokemon.charAt(0).toUpperCase() + favPokemon.slice(1)}
           </Typography>
         </div>
         {favoritePokemon.stats && (
-          <Box mt={2} display="flex" sx={{ fontFamily: 'Restora, serif', fontSize: '10px', fontWeight: 'bold' }}>
+          <Box mt={0} display="flex">
             <Box>
-              <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '10px', fontWeight: 'bold' }}>HP:</Typography>
-              <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '10px', fontWeight: 'bold' }}>ATK:</Typography>
-              <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '10px', fontWeight: 'bold' }}>DEF:</Typography>
+              <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '19px', fontWeight: 'bold' }}>HP:</Typography>
+              <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '19px', fontWeight: 'bold' }}>ATK:</Typography>
+              <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '19px', fontWeight: 'bold' }}>DEF:</Typography>
+            </Box>
+            <Box marginLeft={1}>
+              <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '19px', fontWeight: 'bold' }}>{favoritePokemon.stats[0].base_stat}</Typography>
+              <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '19px', fontWeight: 'bold' }}>{favoritePokemon.stats[1].base_stat}</Typography>
+              <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '19px', fontWeight: 'bold' }}>{favoritePokemon.stats[2].base_stat}</Typography>
             </Box>
             <Box marginLeft={2}>
-              <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '10px', fontWeight: 'bold' }}>{favoritePokemon.stats[0].base_stat}</Typography>
-              <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '10px', fontWeight: 'bold' }}>{favoritePokemon.stats[1].base_stat}</Typography>
-              <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '10px', fontWeight: 'bold' }}>{favoritePokemon.stats[2].base_stat}</Typography>
+              <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '19px', fontWeight: 'bold' }}>SP-ATK:</Typography>
+              <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '19px', fontWeight: 'bold' }}>SP-DEF:</Typography>
+              <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '19px', fontWeight: 'bold' }}>SPD:</Typography>
             </Box>
-            <Box marginLeft={4}>
-              <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '10px', fontWeight: 'bold' }}>SP-ATK:</Typography>
-              <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '10px', fontWeight: 'bold' }}>SP-DEF:</Typography>
-              <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '10px', fontWeight: 'bold' }}>SPD:</Typography>
-            </Box>
-            <Box marginLeft={2}>
-              <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '10px', fontWeight: 'bold' }}>{favoritePokemon.stats[3].base_stat}</Typography>
-              <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '10px', fontWeight: 'bold' }}>{favoritePokemon.stats[4].base_stat}</Typography>
-              <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '10px', fontWeight: 'bold' }}>{favoritePokemon.stats[5].base_stat}</Typography>
+            <Box marginLeft={1}>
+              <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '19px', fontWeight: 'bold' }}>{favoritePokemon.stats[3].base_stat}</Typography>
+              <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '19px', fontWeight: 'bold' }}>{favoritePokemon.stats[4].base_stat}</Typography>
+              <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '19px', fontWeight: 'bold' }}>{favoritePokemon.stats[5].base_stat}</Typography>
             </Box>
           </Box>
 
