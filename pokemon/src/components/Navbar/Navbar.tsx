@@ -46,8 +46,10 @@ const Navbar = ({ refreshComponent, setRefreshComponent }: Props) => {
   const handleLogout = () => {
     setAnchorEl(null);
     setUsername('');
-    localStorage.setItem('isLogin', '');
+    const user = { username: '', data: [] }
+    localStorage.setItem('', JSON.stringify(user));
     setRefreshComponent(!refreshComponent);
+    localStorage.setItem('isLogin', '');
   };
 
   const handleLogin = () => {
@@ -72,8 +74,8 @@ const Navbar = ({ refreshComponent, setRefreshComponent }: Props) => {
       const user = { username: inputUsername, data: [] }
       localStorage.setItem(inputUsername, JSON.stringify(user));
       localStorage.setItem('isLogin', inputUsername);
-      setRefreshComponent(!refreshComponent);
       setShowLoginModal(false);
+      setRefreshComponent(!refreshComponent);
     }
   };
 
