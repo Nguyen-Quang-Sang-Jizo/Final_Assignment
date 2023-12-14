@@ -19,9 +19,6 @@ function App() {
         refreshComponent={refreshComponent} />
       <Routes>
         <Route path="/" element={<HomePage
-          setRefreshComponent={setRefreshComponent}
-          refreshComponent={refreshComponent}
-          refresh={refreshComponent}
         />} />
         <Route path="/pokemon" element={<PokemonList
           refresh={refreshComponent}
