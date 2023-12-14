@@ -26,15 +26,16 @@ const MyPokemonList = ({ refresh }: Props) => {
   const list = localStorage.getItem(isLogin) ?? '';
   let fav: { data: PokemonHome[] } = { data: [] };
 
-  try {
-    if (list) {
+  if (list) {
+    try {
       fav = JSON.parse(list);
+    } catch (error) {
+      console.error('Error parsing JSON:', error);
+      fav = { data: [] };
     }
-  } catch (error) {
-    console.error('Error parsing JSON:', error);
+  } else {
     fav = { data: [] };
   }
-
 
   const [favoritePokemon, setFavoritePokemon] = useState<PokemonHome[]>(fav.data);
 
