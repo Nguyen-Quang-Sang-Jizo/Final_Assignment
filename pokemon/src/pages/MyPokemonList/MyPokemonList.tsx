@@ -22,8 +22,8 @@ interface Props {
 }
 
 const MyPokemonList = ({ refresh }: Props) => {
-  const isLogin = localStorage.getItem('isLogin') ?? '';
-  const list = localStorage.getItem(isLogin) ?? '';
+  const isLogin = localStorage.getItem('isLogin') || '';
+  const list = localStorage.getItem(isLogin) || '';
   let fav: { data: PokemonHome[] } = { data: [] };
 
   if (list) {
