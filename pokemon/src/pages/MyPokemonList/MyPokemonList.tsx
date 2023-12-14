@@ -26,7 +26,7 @@ const MyPokemonList = ({ refresh }: Props) => {
   const list = localStorage.getItem(isLogin) || '';
   let fav: { data: PokemonHome[] } = { data: [] };
 
-  if (list) {
+  if (list!=='') {
     try {
       fav = JSON.parse(list);
     } catch (error) {
