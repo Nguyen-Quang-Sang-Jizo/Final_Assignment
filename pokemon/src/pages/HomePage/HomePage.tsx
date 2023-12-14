@@ -4,27 +4,17 @@ import { Link } from 'react-router-dom';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { useEffect, useState } from 'react';
 
-interface Props {
-  setRefreshComponent: (value: boolean) => void;
-  refreshComponent: boolean;
-  refresh: boolean;
-}
 
-const HomePage = ({ refresh, refreshComponent, setRefreshComponent }: Props) => {
+
+const HomePage = () => {
   const [id, setId] = useState(Math.floor(Math.random() * 1292) + 1)
-  useEffect(() => {
-    setId(Math.floor(Math.random() * 1292) + 1)
-  }, [refresh])
+  
   const { data: pokemon = [] } = useQuery({
     queryKey: ['pokeData'],
     queryFn: () =>
       fetch('https://pokeapi.co/api/v2/pokemon/' + id)
         .then((res) => res.json()),
   });
-
-  if (!pokemon.sprites || !pokemon.sprites.other || !pokemon.sprites.other.home || !pokemon.sprites.other.home.front_default) {
-    setRefreshComponent(!refreshComponent)
-  }
 
   return (
     <div style={{
