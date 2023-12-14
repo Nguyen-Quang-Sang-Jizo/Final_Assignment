@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { Typography, Grid, Paper, IconButton, CardMedia, CircularProgress, Box } from '@mui/material';
@@ -10,7 +10,11 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Link } from 'react-router-dom';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
-const PokemonList = () => {
+interface Props {
+  refresh: boolean;
+}
+
+const PokemonList = ({ refresh }: Props) => {
   const isLogin = localStorage.getItem('isLogin') ?? '';
   const list = localStorage.getItem(isLogin) ?? '';
   let fav: { data: PokemonHome[] } = { data: [] };
@@ -24,9 +28,11 @@ const PokemonList = () => {
     fav = { data: [] };
   }
 
-
   const [favoritePokemon, setFavoritePokemon] = useState<PokemonHome[]>(fav.data);
 
+  useEffect(() => {
+    setFavoritePokemon(fav.data)
+  }, [refresh])
 
   const fetchData = async ({ pageParam }: { pageParam: number }) => {
     const response = await axios.get(`https://pokeapi.co/api/v2/pokemon?offset=${pageParam}&limit=30`);
@@ -81,6 +87,7 @@ const PokemonList = () => {
   };
 
   return (
+    <>
     <div style={{ padding: '75px 20px' }}>
       {status === 'pending' ? (
         <div style={{ textAlign: 'center', padding: '20px' }}>
@@ -94,7 +101,7 @@ const PokemonList = () => {
           next={fetchNextPage}
           hasMore={hasNextPage}
           loader={<CircularProgress style={{ display: 'block', margin: '20px auto' }} />}
-          endMessage={<p>Nothing more to load</p>}
+          endMessage={<p style={{ textAlign: 'center', margin: '20px', padding: '10px', background: '#f0f0f0', borderRadius: '5px', boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', fontFamily: 'Restora, serif', fontSize: '20px', fontWeight: 'bold' }}>END</p>}
         >
           <Grid container spacing={2}>
             {data?.pages.map((group, i) => (
@@ -123,7 +130,7 @@ const PokemonList = () => {
                           className='paper'
                         >
                           <div style={{ position: 'relative' }}>
-                            <Link to={`/pokemon/${pokemon.id}`} style={{ position: 'absolute', top: -10, left: -30, color: 'grey' }} >
+                            <Link to={`/pokemon/${pokemon.id}`} style={{ position: 'absolute', top: -6, left: -30, color: 'grey' }} >
                               <InfoOutlinedIcon />
                             </Link>
                             {pokemon.sprites && pokemon.sprites.other && (
@@ -145,31 +152,31 @@ const PokemonList = () => {
                             {isFavorite ? <CatchingPokemonIcon /> : <CatchingPokemonIcon />}
                           </IconButton>
                           {pokemon.species && (
-                            <Typography variant="h6" component="h6" sx={{ mt: 1, fontFamily: 'Restora, serif', fontSize: '22px', fontStyle: 'italic', fontWeight: 'bold' }}>
+                            <Typography variant="h6" component="h6" sx={{ mt: 0, fontFamily: 'Restora, serif', fontSize: '30px', fontStyle: 'italic', fontWeight: 'bold' }}>
                               {pokemon.species.name.charAt(0).toUpperCase() + pokemon.species.name.slice(1)}
                             </Typography>
                           )}
                           {pokemon.stats && (
-                            <Box mt={2} display="flex">
+                            <Box mt={0} display="flex">
                               <Box>
-                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '10px', fontWeight: 'bold' }}>HP:</Typography>
-                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '10px', fontWeight: 'bold' }}>ATK:</Typography>
-                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '10px', fontWeight: 'bold' }}>DEF:</Typography>
+                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '19px', fontWeight: 'bold' }}>HP:</Typography>
+                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '19px', fontWeight: 'bold' }}>ATK:</Typography>
+                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '19px', fontWeight: 'bold' }}>DEF:</Typography>
+                              </Box>
+                              <Box marginLeft={1}>
+                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '19px', fontWeight: 'bold' }}>{pokemon.stats[0].base_stat}</Typography>
+                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '19px', fontWeight: 'bold' }}>{pokemon.stats[1].base_stat}</Typography>
+                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '19px', fontWeight: 'bold' }}>{pokemon.stats[2].base_stat}</Typography>
                               </Box>
                               <Box marginLeft={2}>
-                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '10px', fontWeight: 'bold' }}>{pokemon.stats[0].base_stat}</Typography>
-                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '10px', fontWeight: 'bold' }}>{pokemon.stats[1].base_stat}</Typography>
-                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '10px', fontWeight: 'bold' }}>{pokemon.stats[2].base_stat}</Typography>
+                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '19px', fontWeight: 'bold' }}>SP-ATK:</Typography>
+                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '19px', fontWeight: 'bold' }}>SP-DEF:</Typography>
+                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '19px', fontWeight: 'bold' }}>SPD:</Typography>
                               </Box>
-                              <Box marginLeft={4}>
-                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '10px', fontWeight: 'bold' }}>SP-ATK:</Typography>
-                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '10px', fontWeight: 'bold' }}>SP-DEF:</Typography>
-                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '10px', fontWeight: 'bold' }}>SPD:</Typography>
-                              </Box>
-                              <Box marginLeft={2}>
-                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '10px', fontWeight: 'bold' }}>{pokemon.stats[3].base_stat}</Typography>
-                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '10px', fontWeight: 'bold' }}>{pokemon.stats[4].base_stat}</Typography>
-                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '10px', fontWeight: 'bold' }}>{pokemon.stats[5].base_stat}</Typography>
+                              <Box marginLeft={1}>
+                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '19px', fontWeight: 'bold' }}>{pokemon.stats[3].base_stat}</Typography>
+                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '19px', fontWeight: 'bold' }}>{pokemon.stats[4].base_stat}</Typography>
+                                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '19px', fontWeight: 'bold' }}>{pokemon.stats[5].base_stat}</Typography>
                               </Box>
                             </Box>
                           )}
@@ -184,6 +191,7 @@ const PokemonList = () => {
       )}
       <ToastContainer autoClose={1000} />
     </div>
+    </>
   );
 };
 

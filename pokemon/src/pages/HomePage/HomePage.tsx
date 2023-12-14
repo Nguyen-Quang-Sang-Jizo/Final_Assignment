@@ -2,9 +2,19 @@ import { Box, CardMedia, Paper, Typography } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import { useEffect, useState } from 'react';
 
-const HomePage = () => {
-  const id = Math.floor(Math.random() * 1292) + 1;
+interface Props {
+  setRefreshComponent: (value: boolean) => void;
+  refreshComponent: boolean;
+  refresh: boolean;
+}
+
+const HomePage = ({ refresh, refreshComponent, setRefreshComponent }: Props) => {
+  const [id, setId] = useState(Math.floor(Math.random() * 1292) + 1)
+  useEffect(() => {
+    setId(Math.floor(Math.random() * 1292) + 1)
+  }, [refresh])
   const { data: pokemon = [] } = useQuery({
     queryKey: ['pokeData'],
     queryFn: () =>
@@ -13,6 +23,9 @@ const HomePage = () => {
     refetchOnWindowFocus: true,
   });
 
+  if (!pokemon.sprites || !pokemon.sprites.other || !pokemon.sprites.other.home || !pokemon.sprites.other.home.front_default) {
+    setRefreshComponent(!refreshComponent)
+  }
 
   return (
     <div style={{

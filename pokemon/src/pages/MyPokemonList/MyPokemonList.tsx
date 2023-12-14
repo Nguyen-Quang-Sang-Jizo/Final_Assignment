@@ -1,6 +1,6 @@
 import { PokemonHome } from '../../interface/interface';
 import { Grid } from '@mui/material';
-import React, { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import {
   DndContext,
@@ -17,7 +17,11 @@ import {
 } from '@dnd-kit/sortable';
 import { SortableItem } from './SortableItem';
 
-const MyPokemonList: React.FC = () => {
+interface Props {
+  refresh: boolean;
+}
+
+const MyPokemonList = ({ refresh }: Props) => {
   const isLogin = localStorage.getItem('isLogin') ?? '';
   const list = localStorage.getItem(isLogin) ?? '';
   let fav: { data: PokemonHome[] } = { data: [] };
@@ -33,6 +37,10 @@ const MyPokemonList: React.FC = () => {
 
 
   const [favoritePokemon, setFavoritePokemon] = useState<PokemonHome[]>(fav.data);
+
+  useEffect(() => {
+    setFavoritePokemon(fav.data)
+  }, [refresh])
 
   const id = useMemo(() => favoritePokemon.map((pokemon: any) => pokemon.id), [favoritePokemon]);
 
