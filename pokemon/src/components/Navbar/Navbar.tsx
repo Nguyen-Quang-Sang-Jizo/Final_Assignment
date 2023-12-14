@@ -46,8 +46,10 @@ const Navbar = ({ refreshComponent, setRefreshComponent }: Props) => {
   const handleLogout = () => {
     setAnchorEl(null);
     setUsername('');
+    const user = { username: '', data: [] }
+    localStorage.setItem('Logout', JSON.stringify(user));
+    localStorage.setItem('isLogin', 'Logout');
     setRefreshComponent(!refreshComponent);
-    localStorage.setItem('isLogin', '');
   };
 
   const handleLogin = () => {
@@ -172,7 +174,7 @@ const Navbar = ({ refreshComponent, setRefreshComponent }: Props) => {
               onClose={handleClose1}
               style={{ display: 'flex' }}
             >
-              <Typography sx={{marginLeft:'18px', fontWeight: 'bold' }}>by Type</Typography>
+              <Typography sx={{ marginLeft: '18px', fontWeight: 'bold' }}>by Type</Typography>
               <hr />
               {columns.map((column, columnIndex) => (
                 <div style={{ display: 'flex' }}>
