@@ -47,6 +47,7 @@ const Navbar = ({ refreshComponent, setRefreshComponent }: Props) => {
     setAnchorEl(null);
     setUsername('');
     setRefreshComponent(!refreshComponent);
+    localStorage.setItem('isLogin', '');
   };
 
   const handleLogin = () => {
