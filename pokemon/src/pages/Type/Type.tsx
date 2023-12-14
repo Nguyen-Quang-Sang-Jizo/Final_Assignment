@@ -59,7 +59,7 @@ const TypePokemon = ({ refresh }: Props) => {
 
     const handleFavoriteClick = async (pokemon: PokemonHome) => {
         if (isLogin == '') {
-            toast.warning('Please log in to add to My Pokemon List');
+            toast.warning('Please log in');
             return;
         }
         if (favoritePokemon.some((favPokemon: any) => favPokemon.id === pokemon.id)) {
