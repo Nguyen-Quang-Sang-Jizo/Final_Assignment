@@ -46,9 +46,7 @@ const Navbar = ({ refreshComponent, setRefreshComponent }: Props) => {
   const handleLogout = () => {
     setAnchorEl(null);
     setUsername('');
-    const user = { username: '', data: [] }
-    localStorage.setItem('Logout', JSON.stringify(user));
-    localStorage.setItem('isLogin', 'Logout');
+    localStorage.setItem('isLogin', '');
     setRefreshComponent(!refreshComponent);
   };
 
