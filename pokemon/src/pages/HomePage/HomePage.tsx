@@ -20,7 +20,6 @@ const HomePage = ({ refresh, refreshComponent, setRefreshComponent }: Props) => 
     queryFn: () =>
       fetch('https://pokeapi.co/api/v2/pokemon/' + id)
         .then((res) => res.json()),
-    refetchOnWindowFocus: true,
   });
 
   if (!pokemon.sprites || !pokemon.sprites.other || !pokemon.sprites.other.home || !pokemon.sprites.other.home.front_default) {
@@ -48,7 +47,6 @@ const HomePage = ({ refresh, refreshComponent, setRefreshComponent }: Props) => 
           border: '15px solid white',
           borderRadius: '10px',
         }}
-        className='paper'
       >
         <div style={{ position: 'relative' }}>
           <Link to={`/pokemon/${pokemon.id}`} style={{ position: 'absolute', top: 0, left: -40, color: 'grey' }} >

@@ -1,4 +1,4 @@
-import { Box, Typography, Grid, CardMedia, IconButton, Paper } from "@mui/material";
+import { Box, Typography, CardMedia, IconButton, Paper } from "@mui/material";
 import { useParams } from 'react-router-dom';
 import { useQuery } from "@tanstack/react-query";
 import { PokemonHome } from "../../interface/interface";
@@ -40,7 +40,7 @@ const PokemonDetail = ({ refresh }: Props) => {
 
     const handleFavoriteClick = async (pokemon: PokemonHome) => {
         if (isLogin == '') {
-            toast.warning('Please log in to add to My Pokemon List');
+            toast.warning('Please log in');
             return;
         }
         if (favoritePokemon.some((favPokemon: any) => favPokemon.id === pokemon.id)) {
@@ -105,7 +105,7 @@ const PokemonDetail = ({ refresh }: Props) => {
             <Paper
                 elevation={7}
                 sx={{
-                    backgroundColor: 'rgb(250, 230, 230) ',
+                    backgroundColor: 'rgb(250, 230, 230)',
                     width: '700px',
                     height: '680px',
                     border: '15px solid white',
@@ -136,16 +136,16 @@ const PokemonDetail = ({ refresh }: Props) => {
                 >
                     {isFavorite ? <CatchingPokemonIcon /> : <CatchingPokemonIcon />}
                 </IconButton>
-                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1.5rem', fontWeight: 'bold', marginTop: '-10px', textAlign: 'center' }}>
+                <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '2rem', fontWeight: 'bold', marginTop: '-10px', textAlign: 'center' }}>
                     Bio
                 </Typography>
-                <Box mt={2} display="flex" justifyContent="center">
-                    <Box sx={{ width: '180px', height: '80px' }} marginLeft={5}>
+                <Box mt={0} display="flex" justifyContent="center">
+                    <Box sx={{ width: '300px', height: '80px' }} marginLeft={5}>
                         <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1rem', fontWeight: 'bold', lineHeight: '1.5' }}>
                             {flavorSpeech}
                         </Typography>
                     </Box>
-                    <Box marginLeft={20}>
+                    <Box marginLeft={5}>
                         <Box mt={2} display="flex" justifyContent="center">
                             <Box>
                                 <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1.1rem', fontWeight: 'bold', marginTop: '-18px' }}>Genus:</Typography>
@@ -172,7 +172,7 @@ const PokemonDetail = ({ refresh }: Props) => {
                         </Box>
                     </Box>
                 </Box>
-                <Box mt={1} display="flex" justifyContent="center">
+                <Box mt={2} display="flex" justifyContent="center">
                     <Box>
                         <Typography sx={{ fontFamily: 'Restora, serif', fontSize: '1.5rem', fontWeight: 'bold', marginTop: '20px', textAlign: 'center' }}>
                             Training
