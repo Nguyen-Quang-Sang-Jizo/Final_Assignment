@@ -121,7 +121,7 @@ const PokemonDetail = ({ refresh }: Props) => {
                         component="img"
                         height="200"
                         width="200"
-                        image={pokemonData?.sprites.other.home.front_default? pokemonData?.sprites.other.home.front_default: pokemonData?.sprites.other.home.front_shiny}
+                        image={pokemonData?.sprites.other.home.front_default}
                         alt={pokemonData?.species.name}
                     />
                 </div>
