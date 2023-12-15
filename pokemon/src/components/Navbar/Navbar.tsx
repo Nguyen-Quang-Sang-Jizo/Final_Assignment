@@ -142,7 +142,7 @@ const Navbar = ({ refreshComponent, setRefreshComponent }: Props) => {
             )}
           </nav>
           <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center' }}>
-            <Typography>{username}</Typography>
+            <Typography sx={{fontFamily:'Roboto, sans-serif'}}>{username}</Typography>
             <Button
               sx={{ color: 'white' }}
               aria-controls="simple-menu"
