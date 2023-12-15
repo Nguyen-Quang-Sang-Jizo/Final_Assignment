@@ -101,8 +101,6 @@ const Navbar = ({ refreshComponent, setRefreshComponent }: Props) => {
     ],
   ];
 
-  const isUsernameValid = inputUsername.length > 0 && inputUsername.length <= 12;
-
   return (
     <>
       <AppBar position="fixed" className='navbar'>
@@ -215,8 +213,6 @@ const Navbar = ({ refreshComponent, setRefreshComponent }: Props) => {
                 label="Username"
                 variant="outlined"
                 onChange={(e) => setInputUsername(e.target.value)}
-                error={!isUsernameValid}
-                helperText={!isUsernameValid&& inputUsername.length > 0 ? 'Username must be between 1 and 12 characters' : ''}
                 style={{ marginBottom: '16px', width: '100%' }}
               />
               <Button variant="contained" onClick={handleLoginClick} style={{ width: '100%' }}>
