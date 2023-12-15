@@ -216,7 +216,7 @@ const Navbar = ({ refreshComponent, setRefreshComponent }: Props) => {
                 variant="outlined"
                 onChange={(e) => setInputUsername(e.target.value)}
                 error={!isUsernameValid}
-                helperText={!isUsernameValid ? 'Username must be between 1 and 12 characters' : ''}
+                helperText={!isUsernameValid&& inputUsername.length > 0 ? 'Username must be between 1 and 12 characters' : ''}
                 style={{ marginBottom: '16px', width: '100%' }}
               />
               <Button variant="contained" onClick={handleLoginClick} style={{ width: '100%' }}>
