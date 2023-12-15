@@ -7,6 +7,7 @@ export interface PokemonHome {
     other: {
       home: {
         front_default: string;
+        front_shiny: string;
       };
     };
   };

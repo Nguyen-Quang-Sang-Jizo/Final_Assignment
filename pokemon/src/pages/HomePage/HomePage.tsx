@@ -47,7 +47,7 @@ const HomePage = () => {
               component="img"
               height="400"
               width="400"
-              image={pokemon?.sprites.other.home.front_default}
+              image={pokemon?.sprites.other.home.front_default? pokemon?.sprites.other.home.front_default: pokemon?.sprites.other.home.front_shiny}
               alt={pokemon?.species.name}
             />
           )}
