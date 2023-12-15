@@ -171,7 +171,7 @@ const Navbar = ({ refreshComponent, setRefreshComponent }: Props) => {
               onClose={handleClose1}
               style={{ display: 'flex' }}
             >
-              <Typography sx={{ marginLeft: '18px', fontWeight: 'bold' }}>by Type</Typography>
+              <Typography sx={{ marginLeft: '18px', fontWeight: 'bold', fontSize: '15px', fontWeight: 'bold' }}>by Type</Typography>
               <hr />
               {columns.map((column, columnIndex) => (
                 <div style={{ display: 'flex' }}>
