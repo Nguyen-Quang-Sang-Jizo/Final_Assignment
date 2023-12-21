@@ -142,7 +142,7 @@ const Navbar = ({ refreshComponent, setRefreshComponent }: Props) => {
             )}
           </nav>
           <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center' }}>
-            <Typography sx={{fontSize: '20px'}}>{username}</Typography>
+            <Typography sx={{fontSize: '20px', fontFamily: 'Restora, serif', fontStyle: 'italic', fontWeight: 'bold'}}>{username}</Typography>
             <Button
               sx={{ color: 'white' }}
               aria-controls="simple-menu"
@@ -158,9 +158,9 @@ const Navbar = ({ refreshComponent, setRefreshComponent }: Props) => {
               onClose={handleClose}
             >
               {username ?
-                <MenuItem onClick={handleLogout} sx={{ height: '20px', fontFamily: 'Restora, serif', fontSize: '30px', fontStyle: 'italic', fontWeight: 'bold' }}>Log out</MenuItem>
+                <MenuItem onClick={handleLogout} sx={{ height: '20px' }}>Log out</MenuItem>
                 :
-                <MenuItem onClick={handleLogin} sx={{ height: '20px', fontFamily: 'Restora, serif', fontSize: '30px', fontStyle: 'italic', fontWeight: 'bold' }}>Log in</MenuItem>
+                <MenuItem onClick={handleLogin} sx={{ height: '20px' }}>Log in</MenuItem>
               }
             </Menu>
             <Menu
